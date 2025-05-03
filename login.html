@@ -272,14 +272,14 @@
             }
         }
         // Initial setup: Show login tab by default and check user type
-        // document.addEventListener('DOMContentLoaded', () => {
-        //     showTab('login'); // Show login tab initially
-        //     toggleOrganizationFields(); // Check initial user type selection
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('login'); // Show login tab initially
+            toggleOrganizationFields(); // Check initial user type selection
 
-        //     // --- Example Login/Logout Simulation ---
-        //     const loginButton = document.getElementById('loginButton');
-        //     const userProfile = document.getElementById('userProfile');
-        //     const logoutButton = document.getElementById('logoutButton'); // Assuming this exists in the profile dropdown
+            // --- Example Login/Logout Simulation ---
+            const loginButton = document.getElementById('loginButton');
+            const userProfile = document.getElementById('userProfile');
+            const logoutButton = document.getElementById('logoutButton'); // Assuming this exists in the profile dropdown
 
         //     // Simulate login
         //     loginButton.addEventListener('click', () => {
@@ -322,7 +322,7 @@
         //         });
         //     }
         //     // --- End Example Login/Logout Simulation ---
-        // });
+        });
 
     </script>
 
