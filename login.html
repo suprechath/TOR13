@@ -3,391 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบกระทรวงแรงงาน</title>
+    <title>ลงทะเบียน/เข้าสู่ระบบ - ระบบฐานข้อมูลกลางกระทรวงแรงงาน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        /* Custom styles if needed, but prefer Tailwind */
+        /* Custom styles if needed */
         body {
-            font-family: 'Sarabun', sans-serif; /* Example Thai font */
+            font-family: 'Inter', sans-serif; /* Default font */
         }
-        /* Add smooth transitions */
-        .transition-all {
-            transition: all 0.3s ease-in-out;
+        /* Add smooth transition for tab switching */
+        .tab-content {
+            transition: opacity 0.3s ease-in-out;
         }
-        .hidden-form {
-            display: none;
+        .tab-content.hidden {
             opacity: 0;
-            transform: translateY(10px);
-        }
-        .visible-form {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Basic styling for notification badge */
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <style>
+        /* Use Sarabun font for Thai text */
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+        }
+     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="https://placehold.co/100x40/cccccc/333333?text=โลโก้" alt="โลโก้กระทรวงแรงงาน" class="h-10 rounded">
-                <span class="text-xl font-bold text-gray-700">ชื่อระบบ</span>
-            </div>
-
-            <nav class="hidden md:flex space-x-4" id="main-nav-desktop">
-                <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">หน้าหลัก</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">ค้นหาข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">ยุทธศาสตร์ข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">นโยบายข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">จัดการข้อมูล</a>
-                <a href="#" id="admin-menu-desktop" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium hidden">บริหารระบบ</a>
-            </nav>
-
-            <div class="flex items-center space-x-3">
-                <div id="logged-out-controls">
-                    <button id="login-button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">เข้าสู่ระบบ</button>
+        <nav class="px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <img src="https://placehold.co/40x40/3498db/ffffff?text=MOL" alt="โลโก้กระทรวงแรงงาน" class="h-10 w-10 rounded-full object-cover" onerror="this.src='https://placehold.co/40x40/cccccc/ffffff?text=Logo'; this.onerror=null;">
+                        <span class="text-xl font-semibold text-gray-800">ระบบฐานข้อมูลกลาง</span>
+                    </a>
                 </div>
-                <div id="logged-in-controls" class="hidden items-center space-x-3">
-                    <div class="relative">
-                        <button id="notifications-button" class="text-gray-600 hover:text-blue-600 relative">
-                            <i class="fas fa-bell fa-lg"></i>
-                            <span id="notification-indicator" class="notification-badge hidden">3</span> </button>
-                        <div id="notifications-dropdown" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg p-2 hidden">
-                            <p class="text-sm text-gray-700 p-2">ไม่มีการแจ้งเตือนใหม่</p>
-                            </div>
-                    </div>
-                    <div class="relative">
-                        <button id="profile-button" class="flex items-center space-x-2 text-gray-600 hover:text-blue-600">
-                            <img src="https://placehold.co/32x32/eeeeee/777777?text=P" alt="โปรไฟล์ผู้ใช้" class="h-8 w-8 rounded-full">
-                            <span class="text-sm font-medium hidden sm:inline">ชื่อผู้ใช้</span>
+
+                <!-- <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700 focus:outline-none relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                    </button>
+
+                    <button id="loginButton" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                        เข้าสู่ระบบ
+                    </button>
+
+                    <div id="userProfile" class="hidden relative">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
+                            <img src="https://placehold.co/32x32/7f8c8d/ffffff?text=User" alt="โปรไฟล์ผู้ใช้" class="h-8 w-8 rounded-full object-cover" onerror="this.src='https://placehold.co/32x32/cccccc/ffffff?text=P'; this.onerror=null;">
+                            <span class="hidden sm:inline">ชื่อผู้ใช้</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">โปรไฟล์ของฉัน</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">การตั้งค่า</a>
-                            <button id="logout-button" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">ออกจากระบบ</button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">โปรไฟล์</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ตั้งค่า</a>
+                            <hr class="my-1">
+                            <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">ออกจากระบบ</a>
                         </div>
                     </div>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none">
-                    <i class="fas fa-bars fa-lg"></i>
-                </button>
-            </div>
-        </div>
-        <nav id="main-nav-mobile" class="md:hidden hidden bg-white border-t border-gray-200">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">หน้าหลัก</a>
-                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">ค้นหาข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">ยุทธศาสตร์ข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">นโยบายข้อมูล</a>
-                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">จัดการข้อมูล</a>
-                <a href="#" id="admin-menu-mobile" class="text-gray-600 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium hidden">บริหารระบบ</a>
+                </div> -->
             </div>
         </nav>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="max-w-md mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-center">
+        <div class="bg-white p-2 sm:p-8 rounded-xl shadow-lg w-full max-w-md">
+            <div class="flex border-b border-gray-200 mb-6">
+                <button id="loginTabButton" class="flex-1 py-3 text-center font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none" onclick="showTab('login')">
+                    เข้าสู่ระบบ
+                </button>
+                <button id="registerTabButton" class="flex-1 py-3 text-center font-semibold text-gray-500 hover:text-gray-700 focus:outline-none" onclick="showTab('register')">
+                    ลงทะเบียน
+                </button>
+            </div>
 
-            <div id="login-form" class="visible-form transition-all">
+            <div id="loginTabContent" class="tab-content">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">เข้าสู่ระบบ</h2>
-                <form>
+                <form id="loginForm" onsubmit="handleLogin(event)">
                     <div class="mb-4">
-                        <label for="login-username" class="block text-sm font-medium text-gray-700 mb-1">ชื่อผู้ใช้ / อีเมล</label>
-                        <input type="text" id="login-username" name="username" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" required>
+                        <label for="login-username" class="block text-sm font-medium text-gray-700 mb-1">เลขประจำตัวประชาชน / อีเมล</label>
+                        <input type="text" id="login-username" name="username" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                               placeholder="กรอกเลขประจำตัวประชาชนหรืออีเมล">
                     </div>
                     <div class="mb-4">
                         <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
-                        <input type="password" id="login-password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกรหัสผ่าน" required>
+                        <input type="password" id="login-password" name="password" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                               placeholder="กรอกรหัสผ่าน">
                     </div>
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <input id="remember-me" name="remember-me" type="checkbox"
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                             <label for="remember-me" class="ml-2 block text-sm text-gray-900">จำฉันไว้ในระบบ</label>
                         </div>
                         <div class="text-sm">
-                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">ลืมรหัสผ่าน?</a>
+                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                                ลืมรหัสผ่าน?
+                            </a>
                         </div>
                     </div>
-                    <button type="submit" id="submit-login" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition-colors">
-                        เข้าสู่ระบบ
-                    </button>
+                    <div>
+                        <button type="submit"
+                                class="w-full flex justify-center py-2 px-4 rounded-lg shadow-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                                เข้าสู่ระบบ
+                        </button>
+                    </div>
                 </form>
-                <p class="mt-6 text-center text-sm text-gray-600">
-                    ยังไม่มีบัญชี? <button id="show-register-form" class="font-medium text-blue-600 hover:text-blue-500">ลงทะเบียนที่นี่</button>
-                </p>
             </div>
 
-            <div id="register-form" class="hidden-form transition-all">
+            <div id="registerTabContent" class="tab-content hidden">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">ลงทะเบียน</h2>
-                <form>
+                <form action="#" method="POST">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทผู้ใช้งาน</label>
                         <div class="flex space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="radio" class="form-radio text-blue-600" name="userType" value="individual" checked>
-                                <span class="ml-2">บุคคล</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" class="form-radio text-blue-600" name="userType" value="organization">
-                                <span class="ml-2">หน่วยงาน</span>
-                            </label>
+                            <div class="flex items-center">
+                                <input id="type-individual" name="user_type" type="radio" value="individual" checked class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                <label for="type-individual" class="ml-2 block text-sm text-gray-900">บุคคลทั่วไป</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="type-organization" name="user_type" type="radio" value="organization" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                <label for="type-organization" class="ml-2 block text-sm text-gray-900">หน่วยงาน/องค์กร</label>
+                            </div>
                         </div>
                     </div>
+                    <div id="userFields" class="hidden space-y-4 mb-4">
+                        <div class="mb-4">
+                            <label for="register-username" class="block text-sm font-medium text-gray-700 mb-1">ชื่อผู้ใช้</label>
+                            <input type="text" id="register-username" name="username" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                                   placeholder="กรอกชื่อผู้ใช้ (ภาษาไทย)">
+                        </div>
+                        <div class="mb-4">
+                            <label for="register-userID" class="block text-sm font-medium text-gray-700 mb-1">เลขประจำตัวประชาชน</label>
+                            <input type="userID" id="register-userID" name="userID" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                                placeholder="กรอกเลขประจำตัวประชาชน">
+                        </div>
+                    </div>
+                    <div id="organizationFields" class="hidden space-y-4 mb-4">
+                        <div >
+                           <label for="org-name" class="block text-sm font-medium text-gray-700 mb-1">ชื่อหน่วยงาน/องค์กร</label>
+                           <input type="text" id="org-name" name="org_name" required
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                                  placeholder="กรอกชื่อหน่วยงาน">
+                       </div>
+                       <div>
+                           <label for="org-id" class="block text-sm font-medium text-gray-700 mb-1">เลขหน่วยงาน/องค์กร</label>
+                           <input type="text" id="org-id" name="org_id"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                                  placeholder="กรอกเลขหน่วยงานหรือองค์กร">
+                       </div>
+                   </div>
                     <div class="mb-4">
                         <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">อีเมล</label>
-                        <input type="email" id="register-email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกอีเมล" required>
+                        <input type="email" id="register-email" name="email" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                               placeholder="กรอกอีเมล">
                     </div>
                     <div class="mb-4">
                         <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
-                        <input type="password" id="register-password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="สร้างรหัสผ่าน" required>
+                        <input type="password" id="register-password" name="password" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                               placeholder="ตั้งรหัสผ่าน (อย่างน้อย 8 ตัว)">
                     </div>
                     <div class="mb-6">
                         <label for="register-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">ยืนยันรหัสผ่าน</label>
-                        <input type="password" id="register-confirm-password" name="confirm_password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="ยืนยันรหัสผ่านอีกครั้ง" required>
+                        <input type="password" id="register-confirm-password" name="confirm_password" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                               placeholder="ยืนยันรหัสผ่านอีกครั้ง">
                     </div>
-                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition-colors">
-                        ลงทะเบียน
-                    </button>
-                </form>
-                <p class="mt-6 text-center text-sm text-gray-600">
-                    มีบัญชีอยู่แล้ว? <button id="show-login-form" class="font-medium text-blue-600 hover:text-blue-500">เข้าสู่ระบบที่นี่</button>
-                </p>
-            </div>
 
+                    <div>
+                        <button type="submit"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                            ลงทะเบียน
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
 
     <footer class="bg-gray-800 text-white mt-auto">
-        <div class="container mx-auto px-4 py-6 text-center md:text-left">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <p class="text-sm">&copy; <span id="footer-year"></span> กระทรวงแรงงาน. สงวนลิขสิทธิ์.</p>
+         <div class="px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0">
+                <div class="text-sm text-gray-400">
+                    กระทรวงแรงงาน สงวนลิขสิทธิ์
                 </div>
-                <div class="space-x-4">
-                    <a href="#" class="text-sm text-gray-400 hover:text-white">นโยบายความเป็นส่วนตัว</a>
-                    <a href="#" class="text-sm text-gray-400 hover:text-white">ลิงก์ที่เกี่ยวข้อง</a>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-400">ข้อมูลติดต่อ: <a href="tel:xxxxxxx" class="hover:text-white">xxx-xxx-xxxx</a></p>
-                </div>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out">นโยบายความเป็นส่วนตัว</a>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out">ลิงก์ที่เกี่ยวข้อง</a>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out justify-left">ข้อมูลติดต่อ</a>
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- State ---
-            let isLoggedIn = false; // Simulate user login state
-            let userRole = 'guest'; // Simulate user role ('guest', 'user', 'admin')
-            let notificationsVisible = false;
-            let profileVisible = false;
-            let mobileMenuVisible = false;
+        // Get DOM elements
+        const loginTabButton = document.getElementById('loginTabButton');
+        const registerTabButton = document.getElementById('registerTabButton');
+        const loginTabContent = document.getElementById('loginTabContent');
+        const registerTabContent = document.getElementById('registerTabContent');
+        const organizationFields = document.getElementById('organizationFields');
+        const userFields = document.getElementById('userFields');
+        const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
 
-            // --- Element References ---
-            const loginButton = document.getElementById('login-button');
-            const logoutButton = document.getElementById('logout-button');
-            const loggedOutControls = document.getElementById('logged-out-controls');
-            const loggedInControls = document.getElementById('logged-in-controls');
-            const adminMenuDesktop = document.getElementById('admin-menu-desktop');
-            const adminMenuMobile = document.getElementById('admin-menu-mobile');
-            const profileButton = document.getElementById('profile-button');
-            const profileDropdown = document.getElementById('profile-dropdown');
-            const notificationsButton = document.getElementById('notifications-button');
-            const notificationsDropdown = document.getElementById('notifications-dropdown');
-            const notificationIndicator = document.getElementById('notification-indicator'); // Badge for notifications
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileNav = document.getElementById('main-nav-mobile');
-
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const showRegisterButton = document.getElementById('show-register-form');
-            const showLoginButton = document.getElementById('show-login-form');
-            const submitLoginButton = document.getElementById('submit-login'); // Button to simulate login
-
-            const footerYear = document.getElementById('footer-year');
-
-            // --- Functions ---
-
-            // Update UI based on login state and role
-            function updateUI() {
-                if (isLoggedIn) {
-                    loggedOutControls.classList.add('hidden');
-                    loggedInControls.classList.remove('hidden');
-                    loggedInControls.classList.add('flex'); // Ensure it's flex for proper layout
-
-                    // Show notification badge (example)
-                    notificationIndicator.classList.remove('hidden');
-
-                    // Adapt navigation based on role
-                    if (userRole === 'admin') {
-                        adminMenuDesktop.classList.remove('hidden');
-                        adminMenuMobile.classList.remove('hidden');
-                    } else {
-                        adminMenuDesktop.classList.add('hidden');
-                        adminMenuMobile.classList.add('hidden');
-                    }
-                    // Hide login/register forms if user is logged in (optional, depends on desired flow)
-                    // loginForm.classList.remove('visible-form');
-                    // loginForm.classList.add('hidden-form');
-                    // registerForm.classList.remove('visible-form');
-                    // registerForm.classList.add('hidden-form');
-
-                } else {
-                    loggedOutControls.classList.remove('hidden');
-                    loggedInControls.classList.add('hidden');
-                    loggedInControls.classList.remove('flex');
-                    adminMenuDesktop.classList.add('hidden');
-                    adminMenuMobile.classList.add('hidden');
-                    notificationIndicator.classList.add('hidden'); // Hide badge when logged out
-                    // Ensure forms are visible when logged out
-                    // showLoginForm(); // Or whichever should be default
-                }
+        // Function to switch between login and register tabs
+        function showTab(tabName) {
+            if (tabName === 'login') {
+                // Show login, hide register
+                loginTabContent.classList.remove('hidden');
+                registerTabContent.classList.add('hidden');
+                // Update button styles
+                loginTabButton.classList.add('text-blue-600', 'border-blue-600');
+                loginTabButton.classList.remove('text-gray-500', 'hover:text-gray-700');
+                registerTabButton.classList.add('text-gray-500', 'hover:text-gray-700');
+                registerTabButton.classList.remove('text-blue-600', 'border-blue-600');
+            } else if (tabName === 'register') {
+                // Show register, hide login
+                registerTabContent.classList.remove('hidden');
+                loginTabContent.classList.add('hidden');
+                 // Update button styles
+                registerTabButton.classList.add('text-blue-600', 'border-blue-600');
+                registerTabButton.classList.remove('text-gray-500', 'hover:text-gray-700');
+                loginTabButton.classList.add('text-gray-500', 'hover:text-gray-700');
+                loginTabButton.classList.remove('text-blue-600', 'border-blue-600');
             }
-
-            // Show Login Form, Hide Register Form
-            function showLoginForm() {
-                loginForm.classList.remove('hidden-form');
-                loginForm.classList.add('visible-form');
-                registerForm.classList.remove('visible-form');
-                registerForm.classList.add('hidden-form');
-            }
-
-            // Show Register Form, Hide Login Form
-            function showRegisterForm() {
-                registerForm.classList.remove('hidden-form');
-                registerForm.classList.add('visible-form');
-                loginForm.classList.remove('visible-form');
-                loginForm.classList.add('hidden-form');
-            }
-
-            // Toggle Profile Dropdown
-            function toggleProfileDropdown() {
-                profileVisible = !profileVisible;
-                if (profileVisible) {
-                    profileDropdown.classList.remove('hidden');
-                    // Close notifications if open
-                    if (notificationsVisible) toggleNotificationsDropdown();
-                } else {
-                    profileDropdown.classList.add('hidden');
-                }
-            }
-
-            // Toggle Notifications Dropdown
-            function toggleNotificationsDropdown() {
-                notificationsVisible = !notificationsVisible;
-                if (notificationsVisible) {
-                    notificationsDropdown.classList.remove('hidden');
-                     // Hide notification badge when opened (optional)
-                    // notificationIndicator.classList.add('hidden');
-                    // Close profile if open
-                    if (profileVisible) toggleProfileDropdown();
-                } else {
-                    notificationsDropdown.classList.add('hidden');
-                }
-            }
-
-             // Toggle Mobile Menu
-            function toggleMobileMenu() {
-                mobileMenuVisible = !mobileMenuVisible;
-                if (mobileMenuVisible) {
-                    mobileNav.classList.remove('hidden');
-                    mobileMenuButton.innerHTML = '<i class="fas fa-times fa-lg"></i>'; // Change to close icon
-                } else {
-                    mobileNav.classList.add('hidden');
-                     mobileMenuButton.innerHTML = '<i class="fas fa-bars fa-lg"></i>'; // Change back to bars icon
-                }
-            }
-
-
-            // Simulate Login
-            function simulateLogin(event) {
-                 event.preventDefault(); // Prevent actual form submission
-                 console.log('Simulating login...');
-                 // In a real app, you'd validate credentials here
-                 isLoggedIn = true;
-                 // Simulate different roles for testing
-                 // userRole = 'user';
-                 userRole = 'admin'; // Or 'admin' to test admin menu
-                 updateUI();
-                 // Optional: Redirect or update main content area
-                 alert('เข้าสู่ระบบสำเร็จ (จำลอง)'); // Replace alert later
-            }
-
-            // Simulate Logout
-            function simulateLogout() {
-                console.log('Simulating logout...');
-                isLoggedIn = false;
-                userRole = 'guest';
-                // Hide dropdowns if open
-                if (profileVisible) toggleProfileDropdown();
-                if (notificationsVisible) toggleNotificationsDropdown();
-                updateUI();
-                showLoginForm(); // Go back to login form on logout
-                alert('ออกจากระบบสำเร็จ (จำลอง)'); // Replace alert later
-            }
-
-            // Set Footer Year
-            function setFooterYear() {
-                const currentYear = new Date().getFullYear();
-                footerYear.textContent = currentYear;
-            }
-
-            // --- Event Listeners ---
-            loginButton.addEventListener('click', showLoginForm); // Or handle directly if login is modal
-            submitLoginButton.addEventListener('click', simulateLogin); // Use the specific login button
-            logoutButton.addEventListener('click', simulateLogout);
-            showRegisterButton.addEventListener('click', showRegisterForm);
-            showLoginButton.addEventListener('click', showLoginForm);
-            profileButton.addEventListener('click', toggleProfileDropdown);
-            notificationsButton.addEventListener('click', toggleNotificationsDropdown);
-            mobileMenuButton.addEventListener('click', toggleMobileMenu);
-
-            // Close dropdowns if clicking outside
-            document.addEventListener('click', (event) => {
-                if (profileVisible && !profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
-                    toggleProfileDropdown();
-                }
-                if (notificationsVisible && !notificationsButton.contains(event.target) && !notificationsDropdown.contains(event.target)) {
-                    toggleNotificationsDropdown();
-                }
-                 // Close mobile menu if clicking outside nav area
-                if (mobileMenuVisible && !mobileMenuButton.contains(event.target) && !mobileNav.contains(event.target)) {
-                    toggleMobileMenu();
-                }
+             // Re-apply opacity for fade-in effect
+            requestAnimationFrame(() => {
+                loginTabContent.style.opacity = tabName === 'login' ? '1' : '0';
+                registerTabContent.style.opacity = tabName === 'register' ? '1' : '0';
             });
+        }
 
-            // Add basic form submission prevention for register form (for demonstration)
-             registerForm.querySelector('form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert('ลงทะเบียนสำเร็จ (จำลอง)'); // Replace alert later
-                // Optionally switch to login form after registration
-                showLoginForm();
-            });
+        // Function to show/hide organization-specific fields
+        function toggleOrganizationFields() {
+            const selectedType = document.querySelector('input[name="user_type"]:checked').value;
+            if (selectedType === 'organization') {
+                organizationFields.classList.remove('hidden');
+                userFields.classList.add('hidden');
+            } else {
+                organizationFields.classList.add('hidden');
+                userFields.classList.remove('hidden');
+            }
+        }
 
-
-            // --- Initial Setup ---
-            setFooterYear();
-            updateUI(); // Set initial UI state
-            showLoginForm(); // Ensure login form is visible initially
-
+        // Add event listeners to user type radio buttons
+        userTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleOrganizationFields);
         });
+
+        // testlogin
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent form submission
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            // Simulate login logic here (e.g., AJAX request to server)
+            console.log(`Logging in with username: ${username} and password: ${password}`);
+            // Show success message (replace with actual logic)
+            if (username && password) {
+                // window.location.href = 'dashboard.html'; // Change this to your target page URL
+                alert('เข้าสู่ระบบสำเร็จ!'); 
+            }
+        }
+        // Initial setup: Show login tab by default and check user type
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     showTab('login'); // Show login tab initially
+        //     toggleOrganizationFields(); // Check initial user type selection
+
+        //     // --- Example Login/Logout Simulation ---
+        //     const loginButton = document.getElementById('loginButton');
+        //     const userProfile = document.getElementById('userProfile');
+        //     const logoutButton = document.getElementById('logoutButton'); // Assuming this exists in the profile dropdown
+
+        //     // Simulate login
+        //     loginButton.addEventListener('click', () => {
+        //         // In a real app, you'd handle actual login logic here
+        //         loginButton.classList.add('hidden');
+        //         userProfile.classList.remove('hidden');
+        //         // Using a simple confirmation box instead of alert
+        //         if (confirm('จำลองการเข้าสู่ระบบสำเร็จ! กด OK เพื่อดำเนินการต่อ')) {
+        //              console.log("Login simulated.");
+        //          }
+        //     });
+
+        //      // Simulate logout (assuming a logout button exists in the profile dropdown)
+        //     if(logoutButton) {
+        //          logoutButton.addEventListener('click', (e) => {
+        //              e.preventDefault(); // Prevent default link behavior
+        //              // In a real app, handle logout logic (clear session, etc.)
+        //              userProfile.classList.add('hidden');
+        //              loginButton.classList.remove('hidden');
+        //              // Using a simple confirmation box instead of alert
+        //              if (confirm('จำลองการออกจากระบบสำเร็จ! กด OK เพื่อดำเนินการต่อ')) {
+        //                  console.log("Logout simulated.");
+        //              }
+        //          });
+        //     }
+
+        //     // Toggle profile dropdown visibility (basic example)
+        //     const profileButton = userProfile.querySelector('button');
+        //     const dropdownMenu = userProfile.querySelector('.absolute');
+        //     if (profileButton && dropdownMenu) {
+        //         profileButton.addEventListener('click', () => {
+        //             dropdownMenu.classList.toggle('hidden');
+        //         });
+        //         // Optional: Close dropdown when clicking outside
+        //         document.addEventListener('click', (event) => {
+        //             // Check if the click is outside the userProfile container
+        //             if (!userProfile.contains(event.target)) {
+        //                 dropdownMenu.classList.add('hidden');
+        //             }
+        //         });
+        //     }
+        //     // --- End Example Login/Logout Simulation ---
+        // });
+
     </script>
 
 </body>

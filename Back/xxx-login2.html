@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบกระทรวงแรงงาน (ShadCN Inspired)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom base styles inspired by ShadCN */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+        }
+
+        /* ShadCN Inspired Component Styles (using Tailwind @apply where possible, or custom CSS) */
+        .card {
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .input {
+            border: 1px solid hsl(var(--input));
+            background-color: hsl(var(--background));
+            border-radius: calc(var(--radius) - 2px);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            width: 100%;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .input:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsla(var(--ring), 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: colors 0.15s ease-in-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .btn:focus {
+             outline: none;
+             box-shadow: 0 0 0 2px hsla(var(--ring), 0.3);
+        }
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+        .btn-primary:hover {
+            background-color: hsl(var(--primary) / 0.9);
+        }
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border-color: hsl(var(--border));
+        }
+        .btn-secondary:hover {
+            background-color: hsl(var(--secondary) / 0.8);
+        }
+         .btn-destructive {
+            background-color: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+        .btn-destructive:hover {
+            background-color: hsl(var(--destructive) / 0.9);
+        }
+        .btn-ghost {
+             background-color: transparent;
+             color: hsl(var(--primary));
+        }
+        .btn-ghost:hover {
+             background-color: hsl(var(--accent));
+             color: hsl(var(--accent-foreground));
+        }
+        .btn-link {
+            color: hsl(var(--primary));
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            background: none;
+            border: none;
+            padding: 0;
+            height: auto;
+        }
+         .btn-link:hover {
+            text-decoration-thickness: 2px;
+         }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem; /* mt-2 */
+            width: 12rem; /* w-48 */
+            background-color: hsl(var(--popover));
+            color: hsl(var(--popover-foreground));
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 0.25rem; /* p-1 */
+            z-index: 50;
+            display: none; /* Initially hidden */
+        }
+        .dropdown-menu-item {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            font-size: 0.875rem; /* text-sm */
+            border-radius: calc(var(--radius) - 4px);
+            cursor: pointer;
+            transition: background-color 0.1s ease-in-out;
+        }
+        .dropdown-menu-item:hover {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+            outline: none;
+        }
+         .dropdown-menu-item.destructive {
+             color: hsl(var(--destructive));
+         }
+         .dropdown-menu-item.destructive:hover {
+             background-color: hsl(var(--destructive) / 0.1);
+         }
+
+        .avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px; /* rounded-full */
+            overflow: hidden;
+            background-color: hsl(var(--muted));
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background-color: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px; /* rounded-full */
+            border: 1px solid hsl(var(--border));
+            padding: 0.125rem 0.625rem; /* px-2.5 py-0.5 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600;
+            transition: colors 0.15s ease-in-out;
+        }
+        .badge-destructive {
+            background-color: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+            border-color: transparent;
+        }
+
+        /* Custom Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: hsla(var(--background), 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: hsl(var(--card));
+            color: hsl(var(--card-foreground));
+            border-radius: var(--radius);
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem; /* p-6 */
+            max-width: 90%;
+            width: 28rem; /* max-w-md */
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content {
+             transform: scale(1);
+        }
+
+        /* Form Tabs */
+        .tab-buttons button {
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px; /* Overlap border */
+            color: hsl(var(--muted-foreground));
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .tab-buttons button.active {
+            border-bottom-color: hsl(var(--primary));
+            color: hsl(var(--primary));
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile Menu (Sheet-like) */
+        .mobile-menu-sheet {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 80%;
+            max-width: 300px;
+            background-color: hsl(var(--background));
+            border-right: 1px solid hsl(var(--border));
+            box-shadow: 0 8px 24px hsla(var(--foreground), 0.1);
+            z-index: 90;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        .mobile-menu-sheet.visible {
+            transform: translateX(0);
+        }
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: hsla(var(--background), 0.6);
+            z-index: 80;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-sm border-b border-[hsl(var(--border))] sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="h-10 w-24 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm">โลโก้</div>
+                <span class="text-lg font-semibold text-gray-800">ชื่อระบบ</span>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-1" id="main-nav-desktop">
+                <a href="#" class="btn btn-ghost text-sm">หน้าหลัก</a>
+                <a href="#" class="btn btn-ghost text-sm">ค้นหาข้อมูล</a>
+                <a href="#" class="btn btn-ghost text-sm">ยุทธศาสตร์ข้อมูล</a>
+                <a href="#" class="btn btn-ghost text-sm">นโยบายข้อมูล</a>
+                <a href="#" class="btn btn-ghost text-sm">จัดการข้อมูล</a>
+                <a href="#" id="admin-menu-desktop" class="btn btn-ghost text-sm hidden">บริหารระบบ</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <div id="logged-out-controls">
+                    <button id="login-button-header" class="btn btn-primary text-sm">เข้าสู่ระบบ</button>
+                </div>
+                <div id="logged-in-controls" class="hidden items-center space-x-3">
+                    <div class="relative">
+                        <button id="notifications-button" class="btn btn-ghost p-2 h-9 w-9 relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                            <span id="notification-indicator" class="absolute top-1 right-1 flex h-3 w-3">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        </button>
+                        <div id="notifications-dropdown" class="dropdown-menu w-72"> <div class="p-2 font-semibold border-b border-[hsl(var(--border))] mb-1">การแจ้งเตือน</div>
+                             <a href="#" class="dropdown-menu-item flex items-start space-x-2">
+                                 <div class="avatar h-8 w-8 mt-1">
+                                     <span class="avatar-fallback text-xs">SYS</span>
+                                 </div>
+                                 <div>
+                                     <p class="font-medium">อัปเดตระบบ</p>
+                                     <p class="text-xs text-muted-foreground">มีการปรับปรุงความปลอดภัย...</p>
+                                 </div>
+                             </a>
+                             <a href="#" class="dropdown-menu-item flex items-start space-x-2">
+                                 <div class="avatar h-8 w-8 mt-1">
+                                      <img src="https://placehold.co/32x32/e2e8f0/64748b?text=U1" alt="User">
+                                 </div>
+                                 <div>
+                                     <p class="font-medium">คำขอใหม่</p>
+                                     <p class="text-xs text-muted-foreground">ผู้ใช้ A ขอเข้าถึงข้อมูล...</p>
+                                 </div>
+                             </a>
+                             <div class="p-2 text-center text-xs text-muted-foreground mt-1">ไม่มีการแจ้งเตือนเก่ากว่านี้</div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button id="profile-button" class="avatar h-9 w-9">
+                             <img src="https://placehold.co/36x36/e2e8f0/64748b?text=P" alt="โปรไฟล์ผู้ใช้">
+                             </button>
+                        <div id="profile-dropdown" class="dropdown-menu">
+                            <div class="px-4 py-2 border-b border-[hsl(var(--border))] mb-1">
+                                <p class="text-sm font-medium">ชื่อผู้ใช้</p>
+                                <p class="text-xs text-muted-foreground">user.email@example.com</p>
+                            </div>
+                            <button class="dropdown-menu-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                โปรไฟล์ของฉัน
+                            </button>
+                            <button class="dropdown-menu-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings mr-2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                การตั้งค่า
+                            </button>
+                            <div class="border-t border-[hsl(var(--border))] my-1"></div>
+                            <button id="logout-button" class="dropdown-menu-item destructive">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                                ออกจากระบบ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden btn btn-ghost p-2 h-9 w-9">
+                    <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                    <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x hidden"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+     <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+    <div id="main-nav-mobile" class="mobile-menu-sheet">
+        <div class="flex justify-between items-center mb-6">
+             <span class="text-lg font-semibold text-gray-800">เมนู</span>
+             <button id="mobile-menu-close-button" class="btn btn-ghost p-2 h-8 w-8">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+             </button>
+        </div>
+        <nav class="flex flex-col space-y-2">
+            <a href="#" class="btn btn-ghost justify-start">หน้าหลัก</a>
+            <a href="#" class="btn btn-ghost justify-start">ค้นหาข้อมูล</a>
+            <a href="#" class="btn btn-ghost justify-start">ยุทธศาสตร์ข้อมูล</a>
+            <a href="#" class="btn btn-ghost justify-start">นโยบายข้อมูล</a>
+            <a href="#" class="btn btn-ghost justify-start">จัดการข้อมูล</a>
+            <a href="#" id="admin-menu-mobile" class="btn btn-ghost justify-start hidden">บริหารระบบ</a>
+        </nav>
+    </div>
+
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto card p-6 md:p-8">
+
+            <div class="flex border-b border-[hsl(var(--border))] mb-6 tab-buttons">
+                <button id="tab-btn-login" data-tab="login" class="tab-button active">เข้าสู่ระบบ</button>
+                <button id="tab-btn-register" data-tab="register" class="tab-button">ลงทะเบียน</button>
+            </div>
+
+            <div id="tab-content-login" class="tab-content active">
+                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">เข้าสู่ระบบ</h2>
+                <form id="login-form">
+                    <div class="mb-4 space-y-1">
+                        <label for="login-username" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้ / อีเมล</label>
+                        <input type="text" id="login-username" name="username" class="input" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" required>
+                    </div>
+                    <div class="mb-4 space-y-1">
+                        <label for="login-password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
+                        <input type="password" id="login-password" name="password" class="input" placeholder="กรอกรหัสผ่าน" required>
+                    </div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-2">
+                             <button type="button" id="remember-me-checkbox" role="checkbox" aria-checked="false" data-state="unchecked" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check opacity-0 peer-data-[state=checked]:opacity-100"><path d="M20 6 9 17l-5-5"/></svg>
+                            </button>
+                            <input type="checkbox" id="remember-me" name="remember-me" class="sr-only peer">
+                            <label for="remember-me-checkbox" class="text-sm text-gray-700 cursor-pointer select-none">จำฉันไว้ในระบบ</label>
+                        </div>
+                        <div class="text-sm">
+                            <button type="button" class="btn btn-link text-sm p-0 h-auto">ลืมรหัสผ่าน?</button>
+                        </div>
+                    </div>
+                    <button type="submit" id="submit-login" class="w-full btn btn-primary">
+                        เข้าสู่ระบบ
+                    </button>
+                </form>
+            </div>
+
+            <div id="tab-content-register" class="tab-content">
+                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">ลงทะเบียน</h2>
+                <form id="register-form">
+                     <div class="mb-4 space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">ประเภทผู้ใช้งาน</label>
+                        <div class="flex space-x-4" role="radiogroup">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="userType" value="individual" class="sr-only peer" checked>
+                                <span class="h-4 w-4 rounded-full border border-primary text-primary ring-offset-background peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 flex items-center justify-center">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-circle scale-0 peer-checked:scale-100 transition-transform"><circle cx="12" cy="12" r="10"/></svg>
+                                </span>
+                                <span class="text-sm font-medium text-gray-700">บุคคล</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="userType" value="organization" class="sr-only peer">
+                                 <span class="h-4 w-4 rounded-full border border-primary text-primary ring-offset-background peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 flex items-center justify-center">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-circle scale-0 peer-checked:scale-100 transition-transform"><circle cx="12" cy="12" r="10"/></svg>
+                                </span>
+                                <span class="text-sm font-medium text-gray-700">หน่วยงาน</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-4 space-y-1">
+                        <label for="register-email" class="block text-sm font-medium text-gray-700">อีเมล</label>
+                        <input type="email" id="register-email" name="email" class="input" placeholder="กรอกอีเมล" required>
+                    </div>
+                    <div class="mb-4 space-y-1">
+                        <label for="register-password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
+                        <input type="password" id="register-password" name="password" class="input" placeholder="สร้างรหัสผ่าน" required>
+                    </div>
+                    <div class="mb-6 space-y-1">
+                        <label for="register-confirm-password" class="block text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน</label>
+                        <input type="password" id="register-confirm-password" name="confirm_password" class="input" placeholder="ยืนยันรหัสผ่านอีกครั้ง" required>
+                    </div>
+                    <button type="submit" class="w-full btn btn-primary bg-green-600 hover:bg-green-700 border-green-600">
+                        ลงทะเบียน
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 border-t border-[hsl(var(--border))] text-muted-foreground mt-auto">
+        <div class="container mx-auto px-4 py-6 text-center md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div>
+                    <p class="text-sm">&copy; <span id="footer-year"></span> กระทรวงแรงงาน. สงวนลิขสิทธิ์.</p>
+                </div>
+                <div class="space-x-4 text-center">
+                    <a href="#" class="text-sm hover:text-primary">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#" class="text-sm hover:text-primary">ลิงก์ที่เกี่ยวข้อง</a>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm">ข้อมูลติดต่อ: <a href="tel:xxxxxxx" class="hover:text-primary">xxx-xxx-xxxx</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-semibold">Modal Title</h3>
+                <button id="modal-close-button" class="btn btn-ghost p-1 h-7 w-7">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <p id="modal-message" class="text-sm text-muted-foreground mb-6">Modal message goes here.</p>
+            <div class="flex justify-end space-x-2">
+                <button id="modal-cancel-button" class="btn btn-secondary">Cancel</button>
+                <button id="modal-confirm-button" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- State ---
+            let isLoggedIn = false;
+            let userRole = 'guest'; // 'guest', 'user', 'admin'
+            let notificationsVisible = false;
+            let profileVisible = false;
+            let mobileMenuVisible = false;
+            let currentTab = 'login';
+
+            // --- Element References ---
+            const loginButtonHeader = document.getElementById('login-button-header');
+            const logoutButton = document.getElementById('logout-button');
+            const loggedOutControls = document.getElementById('logged-out-controls');
+            const loggedInControls = document.getElementById('logged-in-controls');
+            const adminMenuDesktop = document.getElementById('admin-menu-desktop');
+            const adminMenuMobile = document.getElementById('admin-menu-mobile');
+
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const notificationsButton = document.getElementById('notifications-button');
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            const notificationIndicator = document.getElementById('notification-indicator');
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenuIconOpen = document.getElementById('menu-icon-open');
+            const mobileMenuIconClose = document.getElementById('menu-icon-close');
+            const mobileNav = document.getElementById('main-nav-mobile');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+
+            const tabBtnLogin = document.getElementById('tab-btn-login');
+            const tabBtnRegister = document.getElementById('tab-btn-register');
+            const tabContentLogin = document.getElementById('tab-content-login');
+            const tabContentRegister = document.getElementById('tab-content-register');
+
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const rememberMeCheckbox = document.getElementById('remember-me-checkbox');
+            const rememberMeActualInput = document.getElementById('remember-me');
+
+            const footerYear = document.getElementById('footer-year');
+
+            // Modal Elements
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalCloseButton = document.getElementById('modal-close-button');
+            const modalCancelButton = document.getElementById('modal-cancel-button');
+            const modalConfirmButton = document.getElementById('modal-confirm-button');
+            let modalConfirmCallback = null;
+            let modalCancelCallback = null;
+
+            // --- Functions ---
+
+            // Update UI based on login state and role
+            function updateUI() {
+                if (isLoggedIn) {
+                    loggedOutControls.classList.add('hidden');
+                    loggedInControls.classList.remove('hidden');
+                    loggedInControls.classList.add('flex');
+                    notificationIndicator.classList.remove('hidden'); // Show badge when logged in
+
+                    if (userRole === 'admin') {
+                        adminMenuDesktop.classList.remove('hidden');
+                        adminMenuMobile.classList.remove('hidden');
+                    } else {
+                        adminMenuDesktop.classList.add('hidden');
+                        adminMenuMobile.classList.add('hidden');
+                    }
+                } else {
+                    loggedOutControls.classList.remove('hidden');
+                    loggedInControls.classList.add('hidden');
+                    loggedInControls.classList.remove('flex');
+                    adminMenuDesktop.classList.add('hidden');
+                    adminMenuMobile.classList.add('hidden');
+                    notificationIndicator.classList.add('hidden'); // Hide badge when logged out
+                }
+                // Close dropdowns/menus on state change
+                if (profileVisible) toggleProfileDropdown(false);
+                if (notificationsVisible) toggleNotificationsDropdown(false);
+                if (mobileMenuVisible) toggleMobileMenu(false);
+            }
+
+             // Switch Tabs
+            function switchTab(tabId) {
+                currentTab = tabId;
+                // Update button styles
+                tabBtnLogin.classList.toggle('active', tabId === 'login');
+                tabBtnRegister.classList.toggle('active', tabId === 'register');
+                // Update content visibility
+                tabContentLogin.classList.toggle('active', tabId === 'login');
+                tabContentRegister.classList.toggle('active', tabId === 'register');
+            }
+
+            // Toggle Profile Dropdown
+            function toggleProfileDropdown(forceState) {
+                const newState = typeof forceState === 'boolean' ? forceState : !profileVisible;
+                if (newState) {
+                    profileDropdown.style.display = 'block';
+                    // Close notifications if open
+                    if (notificationsVisible) toggleNotificationsDropdown(false);
+                } else {
+                    profileDropdown.style.display = 'none';
+                }
+                profileVisible = newState;
+            }
+
+            // Toggle Notifications Dropdown
+            function toggleNotificationsDropdown(forceState) {
+                const newState = typeof forceState === 'boolean' ? forceState : !notificationsVisible;
+                 if (newState) {
+                    notificationsDropdown.style.display = 'block';
+                    // Close profile if open
+                    if (profileVisible) toggleProfileDropdown(false);
+                } else {
+                    notificationsDropdown.style.display = 'none';
+                }
+                 notificationsVisible = newState;
+            }
+
+            // Toggle Mobile Menu
+            function toggleMobileMenu(forceState) {
+                 const newState = typeof forceState === 'boolean' ? forceState : !mobileMenuVisible;
+                 if (newState) {
+                    mobileNav.classList.add('visible');
+                    mobileMenuOverlay.classList.add('visible');
+                    mobileMenuIconOpen.classList.add('hidden');
+                    mobileMenuIconClose.classList.remove('hidden');
+                } else {
+                    mobileNav.classList.remove('visible');
+                    mobileMenuOverlay.classList.remove('visible');
+                    mobileMenuIconOpen.classList.remove('hidden');
+                    mobileMenuIconClose.classList.add('hidden');
+                }
+                 mobileMenuVisible = newState;
+            }
+
+            // Show Custom Modal
+            function showModal(title, message, confirmText = 'ตกลง', cancelText = null, onConfirm = null, onCancel = null) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+
+                modalConfirmButton.textContent = confirmText;
+                modalConfirmCallback = onConfirm;
+                modalConfirmButton.style.display = 'inline-flex'; // Ensure it's visible
+
+                if (cancelText) {
+                    modalCancelButton.textContent = cancelText;
+                    modalCancelButton.style.display = 'inline-flex';
+                    modalCancelCallback = onCancel;
+                } else {
+                    modalCancelButton.style.display = 'none';
+                    modalCancelCallback = null;
+                }
+
+                modal.classList.add('visible');
+            }
+
+            // Hide Custom Modal
+            function hideModal() {
+                modal.classList.remove('visible');
+                modalConfirmCallback = null;
+                modalCancelCallback = null;
+            }
+
+            // Simulate Login
+            function simulateLogin(event) {
+                 event.preventDefault();
+                 console.log('Simulating login...');
+                 isLoggedIn = true;
+                 userRole = 'admin'; // Or 'user'
+                 updateUI();
+                 showModal('สำเร็จ', 'เข้าสู่ระบบสำเร็จ (จำลอง)');
+            }
+
+            // Simulate Logout
+            function simulateLogout() {
+                console.log('Simulating logout...');
+                isLoggedIn = false;
+                userRole = 'guest';
+                updateUI();
+                switchTab('login'); // Go back to login tab on logout
+                showModal('สำเร็จ', 'ออกจากระบบสำเร็จ (จำลอง)');
+            }
+
+             // Handle Checkbox Toggle
+            function toggleCheckbox(checkboxButton, actualInput) {
+                const currentState = checkboxButton.getAttribute('data-state') === 'checked';
+                const newState = !currentState;
+                checkboxButton.setAttribute('data-state', newState ? 'checked' : 'unchecked');
+                checkboxButton.setAttribute('aria-checked', newState);
+                if (actualInput) {
+                    actualInput.checked = newState;
+                }
+            }
+
+            // Set Footer Year
+            function setFooterYear() {
+                footerYear.textContent = new Date().getFullYear();
+            }
+
+            // --- Event Listeners ---
+            loginButtonHeader.addEventListener('click', () => switchTab('login')); // Show login tab when header button clicked
+            logoutButton.addEventListener('click', simulateLogout);
+
+            // Tab switching
+            tabBtnLogin.addEventListener('click', () => switchTab('login'));
+            tabBtnRegister.addEventListener('click', () => switchTab('register'));
+
+            // Dropdowns
+            profileButton.addEventListener('click', (e) => { e.stopPropagation(); toggleProfileDropdown(); });
+            notificationsButton.addEventListener('click', (e) => { e.stopPropagation(); toggleNotificationsDropdown(); });
+
+            // Mobile Menu
+            mobileMenuButton.addEventListener('click', (e) => { e.stopPropagation(); toggleMobileMenu(); });
+            mobileMenuCloseButton.addEventListener('click', () => toggleMobileMenu(false));
+            mobileMenuOverlay.addEventListener('click', () => toggleMobileMenu(false));
+
+            // Forms
+            loginForm.addEventListener('submit', simulateLogin);
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Add registration validation/logic simulation here
+                showModal('สำเร็จ', 'ลงทะเบียนสำเร็จ (จำลอง)');
+                switchTab('login'); // Switch to login after successful registration
+            });
+
+             // Checkbox
+            rememberMeCheckbox.addEventListener('click', () => toggleCheckbox(rememberMeCheckbox, rememberMeActualInput));
+
+            // Modal Buttons
+            modalCloseButton.addEventListener('click', hideModal);
+            modalCancelButton.addEventListener('click', () => {
+                if (modalCancelCallback) modalCancelCallback();
+                hideModal();
+            });
+            modalConfirmButton.addEventListener('click', () => {
+                if (modalConfirmCallback) modalConfirmCallback();
+                hideModal();
+            });
+            modal.addEventListener('click', (event) => { // Close modal on overlay click
+                 if (event.target === modal) {
+                    hideModal();
+                 }
+            });
+
+
+            // Global click listener to close dropdowns
+            document.addEventListener('click', (event) => {
+                // Close profile dropdown
+                if (profileVisible && !profileButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                    toggleProfileDropdown(false);
+                }
+                // Close notifications dropdown
+                if (notificationsVisible && !notificationsButton.contains(event.target) && !notificationsDropdown.contains(event.target)) {
+                    toggleNotificationsDropdown(false);
+                }
+            });
+
+             // Close mobile menu on link click (optional)
+             mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => toggleMobileMenu(false));
+             });
+
+
+            // --- Initial Setup ---
+            setFooterYear();
+            updateUI();
+            switchTab('login'); // Ensure login tab is active initially
+
+        });
+    </script>
+
+</body>
+</html>
