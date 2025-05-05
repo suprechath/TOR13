@@ -113,7 +113,7 @@
                 <div class="relative max-w-2xl mx-auto">
                     <input id = "main-search" type="text" placeholder="ค้นหาชุดข้อมูล เช่น สถิติการจ้างงาน, ข้อมูลประกันสังคม..." class="pl-12 pr-4 py-4 rounded-lg w-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <i class="fas fa-search absolute left-4 top-5 text-gray-400 text-xl"></i>
-                    <button onclick="navigateTo('search-results')" class="absolute right-2 top-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <button onclick="mainSearch('main-search')" class="absolute right-2 top-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                         ค้นหา
                     </button>
                 </div>
@@ -133,7 +133,7 @@
                 <h2 class="text-2xl font-bold mb-6 text-gray-800">ค้นหาตามหมวดหมู่</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     <!-- Category Card 1 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'employment' })"
+                    <a href="#" onclick="fastFilters('จ้างงาน')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div 
                             class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
@@ -144,7 +144,7 @@
                     </a>
                     
                     <!-- Category Card 2 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'statistics' })"
+                    <a href="#" onclick="fastFilters('สถิติแรงงาน')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div class="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
                             <i class="fas fa-chart-line text-xl"></i>
@@ -154,7 +154,7 @@
                     </a>
                     
                     <!-- Category Card 3 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'social-security' })"
+                    <a href="#" onclick="fastFilters('ประกันสังคม')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div class="bg-yellow-100 text-yellow-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
                             <i class="fas fa-shield-alt text-xl"></i>
@@ -164,7 +164,7 @@
                     </a>
                     
                     <!-- Category Card 4 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'wage' })"
+                    <a href="#" onclick="fastFilters('ค่าจ้าง')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div class="bg-purple-100 text-purple-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
                             <i class="fas fa-money-bill-wave text-xl"></i>
@@ -174,7 +174,7 @@
                     </a>
                     
                     <!-- Category Card 5 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'professional-training' })"
+                    <a href="#" onclick="fastFilters('ฝีมือแรงงาน')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div class="bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
                             <i class="fas fa-user-graduate text-xl"></i>
@@ -184,7 +184,7 @@
                     </a>
                     
                     <!-- Category Card 6 -->
-                    <a href="#" onclick="navigateTo('search-results', { category: 'foreign-worker' })"
+                    <a href="#" onclick="fastFilters('ต่างด้าว')"
                         class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
                         <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
                             <i class="fas fa-users text-xl"></i>
@@ -483,7 +483,7 @@
                                 <p class="text-gray-600 text-sm mb-3">ข้อมูลสถิติการจ้างงานแยกตามจังหวัดและอุตสาหกรรม ประจำปีงบประมาณ 2567</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 15 พ.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250515" ></i> ปรับปรุงล่าสุด: 15 พ.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">การจ้างงาน</span>
@@ -503,7 +503,7 @@
                                 <p class="text-gray-600 text-sm mb-3">ข้อมูลสำรวจภาวะการทำงานของประชากร จำแนกตามสถานภาพแรงงาน อายุ เพศ การศึกษา รายไตรมาส</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานสถิติแห่งชาติ (ร่วมกับ สป.รง.)</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 15 เม.ย. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250415"></i> ปรับปรุงล่าสุด: 15 เม.ย. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">การมีงานทำ</span>
@@ -522,7 +522,7 @@
                                 <p class="text-gray-600 text-sm mb-3">API สำหรับเข้าถึงข้อมูลตำแหน่งงานว่างที่ประกาศผ่านศูนย์บริการจัดหางานทั่วประเทศ</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: Real-time</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="999999"></i> ปรับปรุงล่าสุด: Real-time</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ตำแหน่งงานว่าง</span>
@@ -540,7 +540,7 @@
                                 <p class="text-gray-600 text-sm mb-3">จำนวนผู้ประกันตนตามมาตรา 33 จำแนกรายจังหวัด อัพเดทรายเดือน ข้อมูลย้อนหลัง 5 ปี</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานประกันสังคม</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 1 พ.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250501"></i> ปรับปรุงล่าสุด: 1 พ.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ประกันสังคม</span>
@@ -561,7 +561,7 @@
                                 <p class="text-gray-600 text-sm mb-3">จำนวนผู้ประกันตนแยกตามประเภทและจังหวัด ปี 2567</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานประกันสังคม</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 30 ม.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250130"></i> ปรับปรุงล่าสุด: 30 ม.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ประกันสังคม</span>
@@ -580,7 +580,7 @@
                                 <p class="text-gray-600 text-sm mb-3">อัตราค่าจ้างขั้นต่ำรายจังหวัดและรายสาขาอาชีพ ประจำปี 2566</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมสวัสดิการและคุ้มครองแรงงาน</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 12 ม.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250112"></i> ปรับปรุงล่าสุด: 12 ม.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ค่าจ้าง</span>
@@ -600,7 +600,7 @@
                                 <p class="text-gray-600 text-sm mb-3">รายการมาตรฐานฝีมือแรงงาน, รหัสมาตรฐาน, สาขาอาชีพ, ระดับ</p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมพัฒนาฝีมือแรงงาน</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 12 พ.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250512"></i> ปรับปรุงล่าสุด: 12 พ.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ฝีมือ</span>
@@ -619,7 +619,7 @@
                                 <p class="text-gray-600 text-sm mb-3">จำนวนแรงงานต่างด้าวที่ได้รับอนุญาตทำงานอย่างถูกกฎหมายแยกจำนวนตามสัญชาติหลัก เมียนมา, กัมพูชา, ลาว, เวียดนาม </p>
                                 <div class="text-xs text-gray-500 mb-3 space-x-4">
                                     <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
-                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 30 มี.ค. 2568</span>
+                                    <span><i class="fas fa-calendar-alt mr-1" value="250330"></i> ปรับปรุงล่าสุด: 30 มี.ค. 2568</span>
                                 </div>
                                 <div class="flex flex-wrap gap-1 mb-3">
                                     <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">แรงงาน</span>
@@ -1202,7 +1202,7 @@
                     </div>
                     <div class="flex flex-wrap items-center text-sm text-gray-500 mt-2">
                         <span class="mr-4"><i class="fas fa-building mr-1"></i> กรมการจัดหางาน</span>
-                        <span class="mr-4"><i class="fas fa-calendar-alt mr-1"></i> อัปเดต 15 มิ.ย. 2566</span>
+                        <span class="mr-4"><i class="fas fa-calendar-alt mr-1" value="230615"></i> อัปเดต 15 มิ.ย. 2566</span>
                         <span><i class="fas fa-tag mr-1"></i> การจ้างงาน, สถิติ, รายจังหวัด</span>
                     </div>
                 </div>
@@ -1503,6 +1503,7 @@
                     card.classList.add('hidden');
                 }
             });
+            foundResult = {};
             foundResult = document.querySelectorAll('.search-result-card:not(.hidden)');
             const resultText = `พบ ${foundResult.length} ชุดข้อมูล`;
             console.log(foundResult);
@@ -1560,6 +1561,8 @@
 
         function showFoundResults(page) {
             // const searchResultI = document.querySelectorAll('.search-result-card:not([hidden])');
+            console.log("showFoundResultsType", typeof foundResult);
+            console.log("showFoundResults", foundResult);
             foundResult.forEach((result, index) => {
                 if (index >= (page - 1) * searchResultsPerPage && index < page * searchResultsPerPage) {
                     result.classList.remove('hidden');
@@ -1658,49 +1661,71 @@
                 foundResult = document.querySelectorAll('.search-result-card:not(.hidden)');
                 generatePaginationButtons(foundResult.length);
                 showFoundResults(1); // Reset to first page
-        
+
             } catch (error) {
                 console.error('Error applying filters:', error);
             }
         }
+
+        function mainSearch(InputID) {
+            navigateTo('search-results');
+            filterSearchResults(InputID);
+        }
         
+        function fastFilters(category) {
+            navigateTo('search-results');
+            console.log("catagory", category);
+            // const category = document.querySelector('select[name="category"]').value;
+            const searchCards = document.querySelectorAll('.search-result-card');
+            let visibleResults = 0;
+            searchCards.forEach(card => {
+                let isVisible = true;
+                // Category filter
+                if (category !== 'ทั้งหมด') {
+                    const cardCategory = card.querySelector('h3')?.textContent;
+                    isVisible = isVisible && cardCategory?.includes(category);
+                }
+    
+                // Update visibility
+                card.classList.toggle('hidden', !isVisible);
+                if (isVisible) visibleResults++;
+            });
+        
+            // Update results count
+            const numberOfResult = document.getElementById('number-of-result');
+            numberOfResult.textContent = `พบ ${visibleResults} ชุดข้อมูล`;
+    
+            // Update pagination
+            foundResult = document.querySelectorAll('.search-result-card:not(.hidden)');
+            generatePaginationButtons(foundResult.length);
+            showFoundResults(1); // Reset to first page
+        }
+
         function sortResults() {
-            try {
-                const sortBy = document.getElementById('sort-by').value;
-                const resultsContainer = document.querySelector('.space-y-4');
-                const results = Array.from(document.querySelectorAll('.search-result-card'));
-
-                results.sort((a, b) => {
-                    switch (sortBy) {
-                        case 'วันที่ปรับปรุงล่าสุด':
-                            // Get dates from the cards
-                            const dateA = a.querySelector('.text-gray-500').textContent.match(/\d{1,2}\s\w+\.\s\d{4}/);
-                            const dateB = b.querySelector('.text-gray-500').textContent.match(/\d{1,2}\s\w+\.\s\d{4}/);
-                            // Convert Thai dates to comparable values
-                            return new Date(dateB) - new Date(dateA);
-
-                        case 'ความนิยม':
-                            // Assuming we have download counts or popularity metrics
-                            const popularityA = parseInt(a.dataset.downloads || '0');
-                            const popularityB = parseInt(b.dataset.downloads || '0');
-                            return popularityB - popularityA;
-
-                        default: // 'ความเกี่ยวข้อง'
-                            // Keep original search relevance order
-                            return Array.from(resultsContainer.children).indexOf(a) - 
-                                Array.from(resultsContainer.children).indexOf(b);
-                    }
+            const sortBy = document.querySelector('select[id="sort-by"]').value;
+            // const resultsContainer = document.querySelector('#search-results .space-y-4'); // Container for cards
+            let cardsToSort = Array.from(foundResult); // Convert NodeList to Array
+            if (sortBy === 'วันที่ปรับปรุงล่าสุด') {
+                cardsToSort.sort((a, b) => {
+                    const dateElementA = a.querySelector('i.fa-calendar-alt');
+                    const dateElementB = b.querySelector('i.fa-calendar-alt');
+                    const valueA = dateElementA ? parseInt(dateElementA.getAttribute('value') || '0', 10) : 0;
+                    const valueB = dateElementB ? parseInt(dateElementB.getAttribute('value') || '0', 10) : 0;
+                    if (valueA === 999999 && valueB !== 999999) return -1; // a comes first
+                    if (valueB === 999999 && valueA !== 999999) return 1;  // b comes first
+                    if (valueA === 999999 && valueB === 999999) return 0;  // keep original relative order if both are real-time
+                    return valueB - valueA;
                 });
-
-                // Re-append sorted items
-                results.forEach(card => resultsContainer.appendChild(card));
-
-                // Update pagination after sorting
-                foundResult = results;
-                showFoundResults(1); // Reset to first page
-
-            } catch (error) {
-                console.error('Error sorting results:', error);
+                foundResult = cardsToSort;
+                showFoundResults(1);
+            } else if (sortBy === 'ความเกี่ยวข้อง') { 
+              console.log('Sorting by Relevance (defaulting to filter order)');
+              applyFilters();
+            } else if (sortBy === 'ความนิยม') { // Corresponds to "Popularity"
+                console.warn('Popularity sorting not implemented yet.');
+                applyFilters();
+            } else {
+                applyFilters();
             }
         }
         
