@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบข้อมูลเปิด (Open Data) - กระทรวงแรงงาน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        
+        /* hero background */
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        }
+        
+        /* category-card popup */
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* recommended detail box */
+        .dataset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .data-table table {
+            min-width: 800px;
+        }
+
+        /* highlight selected nav */
+        .nav-link.active {
+            font-weight: 1000;
+            color: #1d4ed8;
+        }
+
+        /* Hide sections by default */
+        .page-section {
+            display: none;
+        }
+        /* Show the active section */
+        .page-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-2xl sticky top-0 z-50">
+        <div class="px-4 py-2 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img src="MOLLogo.png" alt="กระทรวงแรงงาน" class="h-12 w-12 rounded-full">
+                <div class="ml-3">
+                    <h1 class="text-lg font-bold text-gray-800">กระทรวงแรงงาน</h1>
+                    <p class="text-xs text-gray-600">ระบบข้อมูลเปิด (Open Data)</p>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav id = "main-nav" class="hidden md:flex space-x-8">
+                <a href="#" onclick="navigateTo('landing')" class="nav-link active text-gray-600 hover:text-blue-600">หน้าแรก</a>
+                <a href="#" onclick="navigateTo('about')" class="nav-link text-gray-600 hover:text-blue-600">เกี่ยวกับระบบ</a>
+                <a href="#" onclick="navigateTo('search-results')" class="nav-link text-gray-600 hover:text-blue-600">ชุดข้อมูลเปิด</a>
+                <a href="#" id="partner-link" onclick="navigateTo('partner-dashboard')" class="nav-link text-gray-600 hover:text-blue-600 hidden">ชุดข้อมูลเปิด</a>
+                <a href="#" onclick="navigateTo('contact')" class="nav-link text-gray-600 hover:text-blue-600">ติดต่อเรา</a>
+
+            </nav>
+            
+            <!-- Login -->
+            <div class="flex items-center">
+                <button class="bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>เข้าสู่ระบบ/ลงทะเบียน
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="landing" class="page-section active">
+        <!-- Hero Section -->
+        <section class="hero-gradient text-white py-12">
+            <div class="mx-auto text-center">
+                <h1 class="text-3xl font-bold mb-4">ระบบข้อมูลเปิดของกระทรวงแรงงาน</h1>
+                <p class="text-xl mb-8">เข้าถึงข้อมูลสาธารณะของกระทรวงแรงงานได้อย่างสะดวก รวดเร็ว และโปร่งใส</p>
+                
+                <!-- Search Bar -->
+                <div class="relative max-w-2xl mx-auto">
+                    <input id = "main-search" type="text" placeholder="ค้นหาชุดข้อมูล เช่น สถิติการจ้างงาน, ข้อมูลประกันสังคม..." class="pl-12 pr-4 py-4 rounded-lg w-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-4 top-5 text-gray-400 text-xl"></i>
+                    <button onclick="navigateTo('search-results')" class="absolute right-2 top-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        ค้นหา
+                    </button>
+                </div>
+                
+                <div class="mt-4 text-sm">
+                    <span class="inline-block mr-4"><i class="fas fa-database mr-1"></i> 1,245 ชุดข้อมูล</span>
+                    <span class="inline-block mr-4"><i class="fas fa-file-download mr-1"></i> 45,678 การดาวน์โหลด</span>
+                    <span class="inline-block"><i class="fas fa-building mr-1"></i> 12 หน่วยงาน</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <!-- Categories Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">ค้นหาตามหมวดหมู่</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- Category Card 1 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'employment' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div 
+                            class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-briefcase text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">การจ้างงาน</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">245 ชุดข้อมูล</p>
+                    </a>
+                    
+                    <!-- Category Card 2 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'statistics' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div class="bg-green-100 text-green-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">สถิติแรงงาน</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">189 ชุดข้อมูล</p>
+                    </a>
+                    
+                    <!-- Category Card 3 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'social-security' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div class="bg-yellow-100 text-yellow-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-shield-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">ประกันสังคม</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">156 ชุดข้อมูล</p>
+                    </a>
+                    
+                    <!-- Category Card 4 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'wage' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div class="bg-purple-100 text-purple-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-money-bill-wave text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">ค่าจ้าง</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">98 ชุดข้อมูล</p>
+                    </a>
+                    
+                    <!-- Category Card 5 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'professional-training' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div class="bg-red-100 text-red-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-user-graduate text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">ฝึกอาชีพ</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">76 ชุดข้อมูล</p>
+                    </a>
+                    
+                    <!-- Category Card 6 -->
+                    <a href="#" onclick="navigateTo('search-results', { category: 'foreign-worker' })"
+                        class="category-card bg-white p-4 rounded-lg shadow-md transition duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                        <h3 class="text-center font-medium">แรงงานต่างด้าว</h3>
+                        <p class="text-xs text-gray-500 text-center mt-1">112 ชุดข้อมูล</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Featured Datasets -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">ชุดข้อมูลแนะนำ</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dataset Card 1 -->
+                    <div class="dataset-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 transition duration-300">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="inline-block bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">อัปเดตล่าสุด</span>
+                                </div>
+                                <button class="text-gray-400 hover:text-red-500">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2 text-gray-800">สถิติการจ้างงานรายจังหวัด ปี 2567</h3>
+                            <p class="text-gray-600 text-sm mb-4">ข้อมูลสถิติการจ้างงานแยกตามจังหวัดและอุตสาหกรรม ประจำปีงบประมาณ 2567</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">การจ้างงาน</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">รายจังหวัด</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">2567</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span>กรมการจัดหางาน</span>
+                                <span>อัปเดต 15 พ.ค. 2568</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center items-center">
+                                <div class="flex space-x-2">
+                                    <div class="file-icon bg-blue-100 text-blue-600">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div class="file-icon bg-purple-100 text-purple-600">
+                                        <i class="fas fa-file-csv"></i>
+                                    </div>
+                                    <div class="file-icon bg-red-100 text-red-600">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dataset Card 2 -->
+                    <div class="dataset-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 transition duration-300">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="inline-block bg-green-100 text-green-600 text-xs px-2 py-1 rounded">ใหม่</span>
+                                </div>
+                                <button class="text-gray-400 hover:text-red-500">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2 text-gray-800">ข้อมูลผู้ประกันตนระบบประกันสังคม ปี 2567</h3>
+                            <p class="text-gray-600 text-sm mb-4">จำนวนผู้ประกันตนแยกตามประเภทและจังหวัด ปี 2567</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">ประกันสังคม</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">ผู้ประกันตน</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">2567</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span>สำนักงานประกันสังคม</span>
+                                <span>อัปเดต 30 ม.ค. 2568</span>
+                            </div>
+
+                            <div class="mt-4 flex justify-between items-center items-center">
+                                <div class="flex space-x-2">
+                                    <div class="file-icon bg-blue-100 text-blue-600">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div class="file-icon bg-purple-100 text-purple-600">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dataset Card 3 -->
+                    <div class="dataset-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 transition duration-300">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="inline-block bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded">ได้รับความนิยม</span>
+                                </div>
+                                <button class="text-gray-400 hover:text-red-500">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2 text-gray-800">ค่าจ้างขั้นต่ำรายจังหวัด ปี 2566</h3>
+                            <p class="text-gray-600 text-sm mb-4">อัตราค่าจ้างขั้นต่ำรายจังหวัดและรายสาขาอาชีพ ประจำปี 2566</p>
+                            
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">ค่าจ้าง</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">ขั้นต่ำ</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">รายจังหวัด</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span>กรมสวัสดิการและคุ้มครองแรงงาน</span>
+                                <span>อัปเดต 12 ม.ค. 2567</span>
+                            </div>
+
+                            <div class="mt-4 flex justify-between items-center">
+                                <div class="flex space-x-2">
+                                    <div class="file-icon bg-blue-100 text-blue-600">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div class="file-icon bg-green-100 text-green-600">
+                                        <i class="fas fa-file-csv"></i>
+                                    </div>
+                                    <div class="file-icon bg-purple-100 text-purple-600">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News and Announcements -->
+            <section class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">ข่าวสารและประกาศ</h2>
+                    <a href="#" class="text-blue-600 hover:underline">ดูทั้งหมด <i class="fas fa-chevron-right ml-1"></i></a>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <ul class="space-y-2">
+                        <li class="border-b pb-3">
+                            <a href="#" class="text-base font-bold text-gray-800 hover:underline hover:text-blue-800">เปิดให้บริการชุดข้อมูลใหม่ "สถิติการว่างงานรายไตรมาส"</a>
+                            <p class="text-sm text-gray-400 mt-1">25 มิ.ย. 2566
+                                <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded ml-2">ประกาศ</span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">กระทรวงแรงงานเปิดให้บริการชุดข้อมูลสถิติการว่างงานรายไตรมาส พร้อมให้ดาวน์โหลดแล้ววันนี้</p>
+                        </li>
+                        <li class="border-b pb-3">
+                            <a href="#" class="text-base font-bold text-gray-800 hover:underline hover:text-blue-800">อัปเดตข้อมูลการจ้างงานรายจังหวัดล่าสุด</a>
+                            <p class="text-sm text-gray-400 mt-1">18 มิ.ย. 2566
+                                <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded mr-2">อัปเดต</span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">ระบบได้อัปเดตข้อมูลการจ้างงานรายจังหวัดล่าสุดประจำเดือนพฤษภาคม 2566</p>
+                        </li>
+                        <li class="pb-3">
+                            <a href="#" class="text-base font-bold text-gray-800 hover:underline hover:text-blue-800">อบรมการใช้ข้อมูลเปิดสำหรับนักวิจัย วันที่ 15 กรกฎาคม 2566"</a>
+                            <p class="text-sm text-gray-400 mt-1">10 มิ.ย. 2566
+                                <span class="bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded mr-2">กิจกรรม</span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">ลงทะเบียนอบรมฟรี! การใช้งานข้อมูลเปิดเพื่อการวิจัยและพัฒนา</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">สถิติการใช้งานระบบ</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Stat 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-full mr-4">
+                                <i class="fas fa-database text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">ชุดข้อมูลทั้งหมด</p>
+                                <h3 class="text-2xl font-bold text-gray-800">1,245</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 text-green-600 p-3 rounded-full mr-4">
+                                <i class="fas fa-file-download text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">การดาวน์โหลด</p>
+                                <h3 class="text-2xl font-bold text-gray-800">45,678</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 text-purple-600 p-3 rounded-full mr-4">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">ผู้ใช้งาน</p>
+                                <h3 class="text-2xl font-bold text-gray-800">8,932</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section id="search-results" class="page-section px-4 py-4">
+        <main class="container mx-auto "></main>
+            <!-- search -->
+            <section class="mb-8">
+                <h1 class="text-2xl font-bold mb-6">ผลการค้นหา</h1>
+                <div class="relative flex items-center">
+                    <input id = "search-input" type="search" placeholder="ค้นหา" class="w-full p-3 pl-10 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <button onclick = "filterSearchResults('search-input')" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-r-md font-semibold transition-colors">ค้นหา</button>
+                </div>
+            </section>
+
+            <!-- result -->
+            <section class="mb-8"> 
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- filter bar -->
+                    <aside class="w-full md:w-1/4 lg:w-1/5">
+                        <h2 class="text-xl font-semibold mb-4">ตัวกรอง</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-medium mb-2">หมวดหมู่</h3>
+                                <select name="category" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option selected>ทั้งหมด</option>
+                                    <option>ข้อมูลการจ้างงาน</option>
+                                    <option>สถิติแรงงาน</option>
+                                    <option>ข้อมูลประกันสังคม</option>
+                                    <option>ข้อมูลค่าจ้าง</option>
+                                    <option>การพัฒนาฝีมือแรงงาน</option>
+                                    <option>สวัสดิการและคุ้มครอง</option>
+                                    <option>แรงงานต่างด้าว</option>
+                                </select>
+                            </div>
+                            <div>
+                                <h3 class="font-medium mb-2">คำสำคัญ (Tag)</h3>
+                                <input name="tags" type="text" placeholder="เช่น รายจังหวัด, มาตรา 33" class="w-full p-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <h3 class="font-medium mb-2">ประเภทไฟล์ (Format)</h3>
+                                <div class="space-y-1">
+                                    <label class="flex items-center"><input type="checkbox" value="CSV" class="mr-2"> CSV</label>
+                                    <label class="flex items-center"><input type="checkbox" value="XLS" class="mr-2"> XLS/XLSX</label>
+                                    <label class="flex items-center"><input type="checkbox" value="API" class="mr-2"> API</label>
+                                    <label class="flex items-center"><input type="checkbox" value="PDF" class="mr-2"> PDF</label>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-medium mb-2">หน่วยงานเจ้าของข้อมูล</h3>
+                                <select name="organization" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option>ทั้งหมด</option>
+                                    <option>สำนักงานประกันสังคม</option>
+                                    <option>กรมการจัดหางาน</option>
+                                    <option>กรมพัฒนาฝีมือแรงงาน</option>
+                                    <option>สำนักงานสถิติแห่งชาติ</option>
+                                    <option>กรมสวัสดิการและคุ้มครองแรงงาน</option>
+                                </select>
+                            </div>
+                            <button onclick="applyFilters()" class="w-full bg-gray-700 hover:bg-blue-800 text-white p-2 rounded-md mt-4">ใช้ตัวกรอง</button>
+                        </div>
+                    </aside>
+
+                    <!-- result division -->
+                    <div class="w-full md:w-3/4 lg:w-4/5">
+                        <div class="flex justify-between items-center mb-4">
+                            <p id = "number-of-result" class="text-gray-600">พบ 8 ชุดข้อมูล</p>
+                            <div>
+                                <label for="sort-by" class="mr-2 text-sm">จัดเรียงตาม:</label>
+                                <select onchange="sortResults()" id="sort-by" class="p-1 border border-gray-300 rounded-md text-sm">
+                                    <option>ความเกี่ยวข้อง</option>
+                                    <option>วันที่ปรับปรุงล่าสุด</option>
+                                    <option>ความนิยม</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'employment-provincial' })" class="text-blue-700 hover:underline">ข้อมูลการจ้างงาน - สถิติการจ้างงานรายจังหวัด ปี 2567</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">ข้อมูลสถิติการจ้างงานแยกตามจังหวัดและอุตสาหกรรม ประจำปีงบประมาณ 2567</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 15 พ.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">การจ้างงาน</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">รายจังหวัด</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">2567</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLSX</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-csv mr-1"></i>CSV</span>
+                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-pdf mr-1"></i>PDF</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'employment-stats-q' })" class="text-blue-700 hover:underline">สถิติแรงงาน - ภาวะการมีงานทำของประชากร รายไตรมาส</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">ข้อมูลสำรวจภาวะการทำงานของประชากร จำแนกตามสถานภาพแรงงาน อายุ เพศ การศึกษา รายไตรมาส</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานสถิติแห่งชาติ (ร่วมกับ สป.รง.)</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 15 เม.ย. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">การมีงานทำ</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">รายไตรมาส</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">สำรวจ</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLSX</span>
+                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-pdf mr-1"></i>PDF</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'vacancies' })" class="text-blue-700 hover:underline">ข้อมูลการจ้างงาน - ข้อมูลตำแหน่งงานว่าง (API)</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">API สำหรับเข้าถึงข้อมูลตำแหน่งงานว่างที่ประกาศผ่านศูนย์บริการจัดหางานทั่วประเทศ</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: Real-time</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ตำแหน่งงานว่าง</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">API</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">จัดหางาน</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'sso33-provincial' })" class="text-blue-700 hover:underline">ข้อมูลประกันสังคม - สถิติผู้ประกันตนมาตรา 33 รายจังหวัด</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">จำนวนผู้ประกันตนตามมาตรา 33 จำแนกรายจังหวัด อัพเดทรายเดือน ข้อมูลย้อนหลัง 5 ปี</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานประกันสังคม</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 1 พ.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ประกันสังคม</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">มาตรา33</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">รายจังหวัด</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">สถิติ</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-csv mr-1"></i>CSV</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLS</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'sso33-provincial-2567' })" class="text-blue-700 hover:underline">ข้อมูลประกันสังคม - ข้อมูลผู้ประกันตนระบบประกันสังคม ปี 2567</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">จำนวนผู้ประกันตนแยกตามประเภทและจังหวัด ปี 2567</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: สำนักงานประกันสังคม</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 30 ม.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ประกันสังคม</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ผู้ประกันตน</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">2567</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLS</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'wage-minimum-2566' })" class="text-blue-700 hover:underline">ข้อมูลค่าจ้าง - ค่าจ้างขั้นต่ำรายจังหวัด ปี 2566</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">อัตราค่าจ้างขั้นต่ำรายจังหวัดและรายสาขาอาชีพ ประจำปี 2566</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมสวัสดิการและคุ้มครองแรงงาน</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 12 ม.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ค่าจ้าง</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ขั้นต่ำ</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">รายจังหวัด</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLS</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-csv mr-1"></i>CSV</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'skill-dev' })" class="text-blue-700 hover:underline">การพัฒนาฝีมือแรงงาน - ข้อมูลมาตรฐานฝีมือแรงงานแห่งชาติ</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">รายการมาตรฐานฝีมือแรงงาน, รหัสมาตรฐาน, สาขาอาชีพ, ระดับ</p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมพัฒนาฝีมือแรงงาน</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 12 พ.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ฝีมือ</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">มาตรฐาน</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">แรงงาน</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-csv mr-1"></i>CSV</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>
+                            <div class="search-result-card bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200">
+                                <h3 class="text-xl font-semibold mb-1">
+                                    <a href="#" onclick="navigateTo('dataset-detail', { id: 'foreigner-workpermit' })" class="text-blue-700 hover:underline">แรงงานต่างด้าว - สถิติจำนวนแรงงานต่างด้าวที่ได้รับอนุญาตทำงาน</a>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-3">จำนวนแรงงานต่างด้าวที่ได้รับอนุญาตทำงานอย่างถูกกฎหมายแยกจำนวนตามสัญชาติหลัก เมียนมา, กัมพูชา, ลาว, เวียดนาม </p>
+                                <div class="text-xs text-gray-500 mb-3 space-x-4">
+                                    <span><i class="fas fa-building mr-1"></i> หน่วยงาน: กรมการจัดหางาน</span>
+                                    <span><i class="fas fa-calendar-alt mr-1"></i> ปรับปรุงล่าสุด: 30 มี.ค. 2568</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">แรงงาน</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">ต่างด้าว</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">อนุญาต</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-excel mr-1"></i>XLSX</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-file-csv mr-1"></i>CSV</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded"><i class="fas fa-code mr-1"></i>API</span>
+                                </div>
+                            </div>   
+                        </div>
+
+                        <div class="mt-8 flex justify-center">
+                            <nav aria-label="Page navigation">
+                                <ul class="inline-flex items-center -space-x-px">
+                                    <!-- Pagination buttons will be generated here -->
+                                </ul>
+                            </nav>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </section>
+        </main> 
+    </section>
+
+    <section id="about" class="page-section">
+        <!-- Hero Section -->
+        <div class="hero-gradient text-white">
+            <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                        เกี่ยวกับระบบบริหารข้อมูลกลาง
+                    </h1>
+                    <p class="mt-6 max-w-2xl mx-auto text-xl">
+                        แพลตฟอร์มกลางสำหรับรวบรวม จัดการ กำกับดูแล และให้บริการข้อมูลด้านแรงงานของกระทรวงแรงงาน
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Overview -->
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">ระบบบริหารข้อมูลกลางกระทรวงแรงงาน</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    ภาพรวมระบบ
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    ระบบบริหารข้อมูลกลางกระทรวงแรงงาน (Central Data Management Platform of the Ministry of Labour) เป็นแพลตฟอร์มกลางสำหรับรวบรวม จัดการ กำกับดูแล และให้บริการข้อมูลด้านแรงงานของกระทรวงแรงงาน เพื่อยกระดับการบริหารจัดการข้อมูลสู่ดิจิทัลอย่างมีประสิทธิภาพ
+                </p>
+            </div>
+        </div>
+
+        <!-- Background and Rationale -->
+        <div class="bg-gray-100">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center">ความเป็นมาและเหตุผล</h2>
+                    <div class="mt-6 space-y-6">
+                        <p class="text-lg text-gray-600">
+                            ข้อมูลมีความสำคัญอย่างยิ่งในการขับเคลื่อนนโยบายและยุทธศาสตร์ด้านแรงงานของประเทศ กระทรวงแรงงานจึงจำเป็นต้องมีระบบบริหารจัดการข้อมูลกลางที่ได้มาตรฐานและเป็นไปตามกฎหมายที่เกี่ยวข้อง
+                        </p>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-lg font-medium text-gray-900">ความจำเป็นในการพัฒนาระบบ</h3>
+                            <ul class="mt-4 space-y-3 list-disc pl-5 text-gray-600">
+                                <li>ปฏิบัติตาม พ.ร.บ. การบริหารงานและการให้บริการภาครัฐผ่านระบบดิจิทัล พ.ศ. ๒๕๖๒</li>
+                                <li>ปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. ๒๕๖๒</li>
+                                <li>แก้ไขปัญหาการจัดการข้อมูลที่กระจัดกระจายและขาดมาตรฐาน</li>
+                                <li>ลดความยากในการบูรณาการข้อมูลระหว่างหน่วยงาน</li>
+                            </ul>
+                        </div>
+                        <p class="text-lg text-gray-600">
+                            ระบบนี้ถูกพัฒนาขึ้นเพื่อแก้ไขปัญหาดังกล่าวและยกระดับการบริหารจัดการข้อมูลของกระทรวงแรงงานสู่ดิจิทัลอย่างเต็มรูปแบบ
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Objectives -->
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-gray-900">วัตถุประสงค์หลักของระบบ</h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                    ระบบบริหารข้อมูลกลางถูกออกแบบมาเพื่อบรรลุวัตถุประสงค์หลักดังต่อไปนี้
+                </p>
+            </div>
+            
+            <div class="mt-16">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-shield-alt text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">ธรรมาภิบาลข้อมูล</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    สร้างธรรมาภิบาลข้อมูล (Data Governance) ที่ชัดเจนสำหรับข้อมูลด้านแรงงาน
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-ruler-combined text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">มาตรฐานข้อมูล</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    ปรับปรุงมาตรฐานข้อมูลให้เป็นไปในทิศทางเดียวกันทั่วทั้งกระทรวงฯ
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-database text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">แพลตฟอร์มกลาง</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    เป็นแพลตฟอร์มกลางในการกำกับดูแล ตรวจสอบ และบริหารจัดการข้อมูล
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-check-circle text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">คุณภาพข้อมูล</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    เพิ่มคุณภาพข้อมูลให้ถูกต้อง สมบูรณ์ และพร้อมใช้งาน
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-exchange-alt text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">บูรณาการข้อมูล</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    สนับสนุนการแลกเปลี่ยนและบูรณาการข้อมูลกับหน่วยงานต่างๆ
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-white rounded-lg px-6 pb-8 h-full shadow-md hover:shadow-lg transition duration-300">
+                            <div class="-mt-6">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-lock-open text-xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-lg font-medium text-gray-900">ข้อมูลเปิด</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    ส่งเสริมการเปิดเผยข้อมูลภาครัฐ (Open Data) ตามนโยบายรัฐบาล
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Features -->
+        <div class="bg-gray-100">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900">คุณสมบัติหลักของระบบ</h2>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                        ระบบบริหารข้อมูลกลางประกอบด้วยคุณสมบัติหลักที่ออกแบบมาเพื่อตอบสนองความต้องการของผู้ใช้งานทุกกลุ่ม
+                    </p>
+                </div>
+                
+                <div class="mt-16">
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-book text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">บัญชีข้อมูลกลาง</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                รวบรวมรายการข้อมูล Metadata และพจนานุกรมข้อมูลไว้ที่เดียว เพื่อให้ค้นหาและเข้าใจข้อมูลได้ง่าย
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-star text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">การจัดการคุณภาพข้อมูล</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                มีกระบวนการและเครื่องมือในการตรวจสอบและปรับปรุงคุณภาพข้อมูลให้ถูกต้องและสมบูรณ์
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">การบริหารจัดการนโยบาย</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                จัดเก็บและเผยแพร่นโยบาย กฎเกณฑ์ และมาตรฐานข้อมูลให้เป็นปัจจุบัน
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-server text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">บริการข้อมูล</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                ให้บริการข้อมูลแก่ผู้ใช้ที่ได้รับอนุญาต และเผยแพร่ข้อมูลเปิด (Open Data) สู่สาธารณะ
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-project-diagram text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">การบูรณาการข้อมูล</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                รองรับการนำเข้าและเชื่อมโยงข้อมูลจากระบบต่างๆ ภายในและภายนอกกระทรวงฯ
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card bg-white p-6 rounded-xl shadow-md transition duration-300">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                    <i class="fas fa-user-shield text-blue-600 text-2xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-gray-900">ความปลอดภัย</h3>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-gray-600">
+                                ระบบรักษาความปลอดภัยข้อมูลตามมาตรฐาน ISO 27001 และ พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">ประโยชน์ที่คาดว่าจะได้รับ</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    ผลลัพธ์จากการใช้งานระบบ
+                </p>
+            </div>
+            
+            <div class="mt-10">
+                <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">ข้อมูลที่น่าเชื่อถือ</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                กระทรวงฯ มีข้อมูลที่น่าเชื่อถือ เป็นมาตรฐาน และมีคุณภาพสูงขึ้น
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">ตัดสินใจมีประสิทธิภาพ</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                การตัดสินใจและการวางแผนนโยบายมีประสิทธิภาพมากขึ้นด้วยข้อมูลที่ถูกต้อง
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">ลดความซ้ำซ้อน</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                การทำงานกับข้อมูลง่ายขึ้น ลดความซ้ำซ้อนในการจัดเก็บและประมวลผล
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">เข้าถึงข้อมูลสะดวก</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                ประชาชนและหน่วยงานภายนอกเข้าถึงข้อมูลที่เปิดเผยได้สะดวก
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">ความปลอดภัยข้อมูล</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                การแลกเปลี่ยนข้อมูลมีความปลอดภัยและเป็นไปตามกฎหมาย
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">พัฒนาบุคลากร</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                พัฒนาศักยภาพบุคลากรด้านการจัดการข้อมูล
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Governing Principles -->
+        <div class="bg-gray-100">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
+                <div class="lg:text-center">
+                    <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">หลักการกำกับดูแล</h2>
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        แนวทางการบริหารจัดการข้อมูล
+                    </p>
+                </div>
+                
+                <div class="mt-10">
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:px-6">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                หลักธรรมาภิบาลข้อมูล (Data Governance)
+                            </h3>
+                        </div>
+                        <div class="border-t border-gray-200">
+                            <dl>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        การบริหารจัดการ
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        มีโครงสร้างการบริหารจัดการข้อมูลที่ชัดเจน มีผู้รับผิดชอบและกระบวนการทำงานที่เป็นมาตรฐาน
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        การปฏิบัติตามกฎหมาย
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        ปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. ๒๕๖๒ และกฎหมายที่เกี่ยวข้องอย่างเคร่งครัด
+                                    </dd>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        มาตรฐานความปลอดภัย
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        ดำเนินการตามมาตรฐานความปลอดภัย ISO 27001 เพื่อปกป้องข้อมูลอย่างมีประสิทธิภาพ
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        การเปิดเผยข้อมูล
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                        ส่งเสริมการเปิดเผยข้อมูลภาครัฐ (Open Data) ตามนโยบายรัฐบาล
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="page-section">
+        <!-- Contact Section -->
+        <div class="bg-white">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="lg:text-center">
+                    <h2 class="text-base text-blue-600 font-semibold tracking-wide uppercase">ช่องทางติดต่อ</h2>
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        ติดต่อสอบถามข้อมูลเพิ่มเติม
+                    </p>
+                    <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                        สำหรับข้อสงสัยหรือคำถามเกี่ยวกับระบบ สามารถติดต่อเราได้ผ่านช่องทางต่อไปนี้
+                    </p>
+                </div>
+                
+                <div class="mt-10">
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-medium text-gray-900">ศูนย์ช่วยเหลือ</h3>
+                            <div class="mt-4 flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-question-circle text-blue-500 text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">คำถามที่พบบ่อย (FAQ)</a>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        ค้นหาคำตอบสำหรับคำถามทั่วไปเกี่ยวกับระบบ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-medium text-gray-900">ช่องทางการติดต่อ</h3>
+                            <div class="mt-4 space-y-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-envelope text-blue-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-500">อีเมล</p>
+                                        <a href="mailto:datacenter@mol.go.th" class="text-blue-600 hover:text-blue-800">datacenter@mol.go.th</a>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-phone-alt text-blue-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-500">โทรศัพท์</p>
+                                        <a href="tel:022456789" class="text-blue-600 hover:text-blue-800">02-245-6789</a>
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-map-marker-alt text-blue-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-500">ที่อยู่</p>
+                                        <p class="text-gray-600">กระทรวงแรงงาน ถนนมิตรภาพ แขวงดุสิต เขตดุสิต กรุงเทพฯ 10300</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="user-dashboard" class="page-section">
+        <h1 class="text-3xl font-bold mb-4">แดชบอร์ดผู้ใช้งาน (Public User)</h1>
+        <p>ส่วนนี้จะแสดงประวัติการดาวน์โหลด และชุดข้อมูลที่ Bookmark ไว้ (ถ้ามีการลงทะเบียนและ Login)</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-4 pb-4">
+        <div class="px-4 grid grid-cols-1 md:grid-cols-3 gap-10 mb-4 justify-items-center">
+            <!-- About -->
+            <div>
+                <h3 class="text-lg font-bold mb-2">เกี่ยวกับระบบ</h3>
+                <p class="text-gray-300 text-sm mb-4">ระบบข้อมูลเปิดของกระทรวงแรงงาน <br>จัดทำขึ้นเพื่อให้บริการข้อมูลสาธารณะของกระทรวงแรงงานอย่างโปร่งใส</p>
+                <div class="flex space-x-5 ml-2">
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-bold mb-2">ลิงก์ที่เกี่ยวข้อง</h3>
+                <ul class="space-y-1">
+                    <li><a href="https://data.go.th" class="text-gray-300 hover:text-white text-sm">แผนผังเว็บไซต์</a></li>
+                    <li><a href="https://data.go.th/pages/privacy-notice-open-government-data" class="text-gray-300 hover:text-white text-sm">นโยบายความเป็นส่วนตัว</a></li>
+                    <li><a href="https://data.go.th/pages/dga-open-government-license" class="text-gray-300 hover:text-white text-sm">ข้อกำหนดการใช้งาน</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact -->
+            <div>
+                <h3 class="text-lg font-bold mb-2">ติดต่อเรา</h3>
+                <ul class="space-y-1 text-gray-300 text-sm">
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mt-1 mr-4"></i>
+                        <span>ศูนย์เทคโนโลยีสารสนเทศและการสื่อสาร <br>สำนักงานปลัดกระทรวงแรงงาน</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone-alt mr-4"></i>
+                        <span>022321414, 022321416</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-4"></i>
+                        <span>istc@mol.mail.go.th</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="flex justify-center items-center">
+            <p class="text-gray-300 text-sm font-bold">© กระทรวงแรงงาน สงวนลิขสิทธิ์</p>
+        </div>
+    </footer>
+
+
+    <!-- Dataset Detail Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="datasetModal">
+        <div class="container mx-auto p-4 max-w-5xl max-h-screen overflow-y-auto">
+            <div class="bg-white rounded-lg shadow-xl">
+                <!-- Modal Header -->
+                <div class="border-b border-gray-200 px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-gray-800">สถิติการจ้างงานรายจังหวัด ปี 2565</h3>
+                        <button class="text-gray-400 hover:text-gray-600" id="closeModal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap items-center text-sm text-gray-500 mt-2">
+                        <span class="mr-4"><i class="fas fa-building mr-1"></i> กรมการจัดหางาน</span>
+                        <span class="mr-4"><i class="fas fa-calendar-alt mr-1"></i> อัปเดต 15 มิ.ย. 2566</span>
+                        <span><i class="fas fa-tag mr-1"></i> การจ้างงาน, สถิติ, รายจังหวัด</span>
+                    </div>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-6">
+                    <!-- Description -->
+                    <div class="mb-6">
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">คำอธิบาย</h4>
+                        <p class="text-gray-600">ข้อมูลสถิติการจ้างงานแยกตามจังหวัดและอุตสาหกรรม ประจำปีงบประมาณ 2567 ประกอบด้วยข้อมูลจำนวนผู้ถูกจ้างงาน แยกตามประเภทอุตสาหกรรม จังหวัด และรายเดือน</p>
+                    </div>
+                    
+                    <!-- Metadata -->
+                    <div class="mb-6">
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">ข้อมูลเมตาดาต้า</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-500">หน่วยงานเจ้าของข้อมูล:</p>
+                                <p class="text-gray-800">กรมการจัดหางาน</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">ความถี่ในการปรับปรุง:</p>
+                                <p class="text-gray-800">รายปี</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">วันที่เผยแพร่:</p>
+                                <p class="text-gray-800">15 มิถุนายน 2566</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">สัญญาอนุญาต:</p>
+                                <p class="text-gray-800">Open Government License</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resources -->
+                    <div class="mb-6">
+                        <h4 class="font-bold text-lg mb-4 text-gray-800">ไฟล์ข้อมูล</h4>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <!-- Resource 1 -->
+                            <div class="border-b border-gray-200 p-4">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="file-icon bg-blue-100 text-blue-600 mr-3">
+                                            <i class="fas fa-file-excel"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-medium text-gray-800">สถิติการจ้างงานรายจังหวัด ปี 2565 (Excel)</h5>
+                                            <p class="text-xs text-gray-500">XLSX • 2.4 MB • อัปเดต 15 มิ.ย. 2566</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-50">
+                                            <i class="fas fa-eye mr-1"></i> ตัวอย่าง
+                                        </button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                            <i class="fas fa-download mr-1"></i> ดาวน์โหลด
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Resource 2 -->
+                            <div class="border-b border-gray-200 p-4">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="file-icon bg-green-100 text-green-600 mr-3">
+                                            <i class="fas fa-file-csv"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-medium text-gray-800">สถิติการจ้างงานรายจังหวัด ปี 2565 (CSV)</h5>
+                                            <p class="text-xs text-gray-500">CSV • 1.8 MB • อัปเดต 15 มิ.ย. 2566</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-50">
+                                            <i class="fas fa-eye mr-1"></i> ตัวอย่าง
+                                        </button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                            <i class="fas fa-download mr-1"></i> ดาวน์โหลด
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Resource 3 -->
+                            <div class="p-4">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="file-icon bg-purple-100 text-purple-600 mr-3">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-medium text-gray-800">API สถิติการจ้างงานรายจังหวัด</h5>
+                                            <p class="text-xs text-gray-500">JSON API • อัปเดต 15 มิ.ย. 2566</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-50">
+                                            <i class="fas fa-book mr-1"></i> เอกสาร
+                                        </button>
+                                        <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                            <i class="fas fa-link mr-1"></i> เรียกใช้
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Preview -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-lg text-gray-800">ตัวอย่างข้อมูล</h4>
+                            <div class="flex border-b border-gray-200">
+                                <button class="tab-active px-4 py-2 text-sm">ตาราง</button>
+                                <button class="px-4 py-2 text-sm text-gray-600">กราฟ</button>
+                                <button class="px-4 py-2 text-sm text-gray-600">แผนที่</button>
+                            </div>
+                        </div>
+                        
+                        <div class="data-table bg-white border border-gray-200 rounded-lg overflow-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">จังหวัด</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">อุตสาหกรรม</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวน (คน)</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">เปลี่ยนแปลง (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">กรุงเทพมหานคร</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">บริการ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1,245,678</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">+3.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ชลบุรี</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">อุตสาหกรรม</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">876,543</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">+5.1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">เชียงใหม่</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">เกษตรกรรม</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">654,321</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">-1.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ระยอง</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">อุตสาหกรรม</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">543,210</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">+4.5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">นนทบุรี</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">บริการ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">432,109</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-500">+2.8%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Datasets -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-gray-800">ชุดข้อมูลที่เกี่ยวข้อง</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="#" class="bg-gray-50 hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-blue-600 mb-1">สถิติการจ้างงานรายไตรมาส ปี 2565</p>
+                                <p class="text-xs text-gray-500">กรมการจัดหางาน</p>
+                            </a>
+                            <a href="#" class="bg-gray-50 hover:bg-gray-100 p-3 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-blue-600 mb-1">ข้อมูลการว่างงานรายจังหวัด ปี 2565</p>
+                                <p class="text-xs text-gray-500">กรมการจัดหางาน</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="border-t border-gray-200 px-6 py-4 bg-gray-50">
+                    <div class="flex justify-end space-x-3">
+                        <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded text-sm hover:bg-gray-50">
+                            <i class="far fa-bookmark mr-1"></i> บันทึก
+                        </button>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+                            <i class="fas fa-download mr-1"></i> ดาวน์โหลดทั้งหมด
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Basic Navigation & UI Logic ---
+        const sections = document.querySelectorAll('.page-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Function to navigate between sections
+        function navigateTo(sectionId, params = {}) {
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            // Update active nav link
+            navLinks.forEach(link => {
+                if (link.getAttribute('onclick')?.includes(`navigateTo('${sectionId}'`)) {
+                     link.classList.add('active');
+                } else {
+                     link.classList.remove('active');
+                }
+            });
+
+            // Handle specific page loading logic based on params
+            // if (sectionId === 'dataset-detail' && params.id) {
+            //     loadDatasetDetail(params.id);
+            // }
+            // if (sectionId === 'partner-dataset-detail' && params.id) {
+            //     loadPartnerDatasetDetail(params.id);
+            // }
+            //  if (sectionId === 'partner-request-form' && params.dataset) {
+            //      loadRequestForm(params.dataset);
+            //  }
+
+            window.scrollTo(0, 0); // Scroll to top
+        }
+
+        function updateAuthState(username) {
+            // const loginRegisterButtons = document.getElementById('login-register-buttons');
+            // const userProfileSection = document.getElementById('user-profile-section');
+            // const usernameDisplay = document.getElementById('username-display');
+            const partnerLink = document.getElementById('partner-link');
+            // const loginRegisterButtonsDesktop = document.getElementById('login-register-buttons-desktop');
+            // const userProfileSectionDesktop = document.getElementById('user-profile-section-desktop');
+            // const usernameDisplayDesktop = document.getElementById('username-display-desktop');
+
+            if (isLoggedIn && username) {
+                // Show profile, hide login buttons
+                // loginRegisterButtons?.classList.add('hidden');
+                // userProfileSection?.classList.remove('hidden');
+                //  userProfileSection?.classList.add('flex'); // Ensure it's flex for alignment
+                // usernameDisplay.textContent = username;
+                // loginRegisterButtonsDesktop?.classList.add('hidden');
+                // userProfileSectionDesktop?.classList.remove('hidden');
+                //  userProfileSectionDesktop?.classList.add('flex'); // Ensure it's flex for alignment
+                // usernameDisplayDesktop.textContent = username;
+                partnerLink?.classList.remove('hidden'); // Show partner link
+            } else {
+                // Show login buttons, hide profile
+                // loginRegisterButtons?.classList.remove('hidden');
+                // userProfileSection?.classList.add('hidden');
+                // userProfileSection?.classList.remove('flex');
+                //  loginRegisterButtonsDesktop?.classList.remove('hidden');
+                // userProfileSectionDesktop?.classList.add('hidden');
+                //  userProfileSectionDesktop?.classList.remove('flex');
+                partnerLink?.classList.add('hidden'); // Hide partner link
+            }
+        }
+        
+
+        let currentPage = 1; // Current page for search results
+        const searchResultsPerPage = 4; // Number of results per page
+        const totalItems = document.querySelectorAll('.search-result-card').length;
+        let foundResult = {};
+        let numberOfResult = document.getElementById('number-of-result');
+        let totalPages;
+
+        function filterSearchResults(inputId) {
+            let searchInput;
+            if (inputId) {
+                searchInput = document.getElementById(inputId).value;
+            } else {
+                searchInput = document.querySelector('input[type="search"]').value;
+            }
+            const searchCards = document.querySelectorAll('.search-result-card');
+            const searchTerm = searchInput.toLowerCase().trim();
+            searchCards.forEach(card => {
+                const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                const description = card.querySelector('p')?.textContent.toLowerCase() || '';
+                const tags = Array.from(card.querySelectorAll('.bg-gray-200'))
+                    .map(tag => tag.textContent?.toLowerCase() || '')
+                    .filter(tag => tag.length > 0)
+                    .join(' ');
+                const content = `${title} ${description} ${tags}`;
+
+                if (searchTerm === '' || content.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            foundResult = document.querySelectorAll('.search-result-card:not(.hidden)');
+            const resultText = `พบ ${foundResult.length} ชุดข้อมูล`;
+            console.log(foundResult);
+            numberOfResult.textContent = resultText;
+            console.log(numberOfResult.textContent);
+            generatePaginationButtons(foundResult.length);
+            showFoundResults(currentPage);
+        }
+        
+        function generatePaginationButtons(FoundPages) {
+            const paginationContainer = document.querySelector('nav[aria-label="Page navigation"] ul');
+            const totalFoundPages = Math.ceil(FoundPages / searchResultsPerPage);
+            console.log("totalPage", totalFoundPages);
+            totalPages = totalFoundPages;
+            
+            paginationContainer.innerHTML = '';
+            // Previous button
+            const prevButton = `
+                <li>
+                    <a href="#" onclick="if(currentPage > 1) showFoundResults(currentPage - 1)" 
+                    class="prev-page py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            `;
+            paginationContainer.innerHTML += prevButton;
+
+            // Page numbers
+            for (let i = 1; i <= totalFoundPages; i++) {
+                const isActive = i === currentPage;
+                const pageButton = `
+                    <li>
+                        <a href="#" onclick="showFoundResults(${i})" 
+                        class="page-number py-2 px-3 ${
+                            isActive ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'
+                        } border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            ${i}
+                        </a>
+                    </li>
+                `;
+                paginationContainer.innerHTML += pageButton;
+            }
+
+            // Next button
+            const nextButton = `
+                <li>
+                    <a href="#" onclick="if(currentPage < totalPages) showFoundResults(currentPage + 1)" 
+                    class="next-page py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+            `;
+            paginationContainer.innerHTML += nextButton;
+        }
+
+        function showFoundResults(page) {
+            // const searchResultI = document.querySelectorAll('.search-result-card:not([hidden])');
+            foundResult.forEach((result, index) => {
+                if (index >= (page - 1) * searchResultsPerPage && index < page * searchResultsPerPage) {
+                    result.classList.remove('hidden');
+                } else {
+                    result.classList.add('hidden');
+                }
+            });
+
+            // Update pagination
+            currentPage = page;
+
+            // Update active page number
+            document.querySelectorAll('.page-number').forEach(pageBtn => {
+                if (parseInt(pageBtn.textContent) === page) {
+                    pageBtn.classList.add('text-blue-600', 'bg-blue-50');
+                    pageBtn.classList.remove('text-gray-500', 'bg-white');
+                } else {
+                    pageBtn.classList.remove('text-blue-600', 'bg-blue-50');
+                    pageBtn.classList.add('text-gray-500', 'bg-white');
+                }
+            });
+
+            // Update prev/next button states
+            const prevBtn = document.querySelector('.prev-page');
+            const nextBtn = document.querySelector('.next-page');
+            prevBtn.classList.toggle('disabled', page === 1);
+            nextBtn.classList.toggle('disabled', page === totalPages);
+        }
+
+        function applyFilters() {
+            try {
+                // Get filter values
+                const category = document.querySelector('select[name="category"]').value;
+                const tags = document.querySelector('input[name="tags"]').value.toLowerCase().trim();
+                const fileFormats = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                const organization = document.querySelector('select[name="organization"]').value;
+        
+                // Get all search result cards
+                const searchCards = document.querySelectorAll('.search-result-card');
+                let visibleResults = 0;
+        
+                searchCards.forEach(card => {
+                    let isVisible = true;
+        
+                    // Category filter
+                    if (category !== 'ทั้งหมด') {
+                        const cardCategory = card.querySelector('h3')?.textContent;
+                        isVisible = isVisible && cardCategory?.includes(category);
+                    }
+        
+                    // Tags filter
+                    if (tags) {
+                        const cardTags = Array.from(card.querySelectorAll('.bg-gray-200'))
+                            .map(tag => tag.textContent?.toLowerCase())
+                            .join(' ');
+                        isVisible = isVisible && tags.split(',').every(tag => 
+                            cardTags.includes(tag.trim())
+                        );
+                    }
+        
+                    // File format filter
+                    if (fileFormats.length > 0) {
+                        const cardFormats = Array.from(card.querySelectorAll('.text-xs.font-medium'))
+                            .map(format => {
+                                const text = format.textContent.toUpperCase();
+                                // Handle XLS/XLSX special case
+                                if (text.includes('XLS')) return 'XLS';
+                                return text.replace(/[^A-Z]/g, ''); // Remove any non-letter characters
+                            });
+                        
+                        isVisible = isVisible && fileFormats.some(format => {
+                            if (format === 'XLS') {
+                                // Match both XLS and XLSX
+                                return cardFormats.some(cf => cf.includes('XLS'));
+                            }
+                            return cardFormats.includes(format);
+                        });
+                    }
+        
+                    // Organization filter
+                    if (organization !== 'ทั้งหมด') {
+                        const cardOrg = card.querySelector('.text-gray-500')?.textContent;
+                        isVisible = isVisible && cardOrg?.includes(organization);
+                    }
+        
+                    // Update visibility
+                    card.classList.toggle('hidden', !isVisible);
+                    if (isVisible) visibleResults++;
+                });
+        
+                // Update results count
+                const numberOfResult = document.getElementById('number-of-result');
+                numberOfResult.textContent = `พบ ${visibleResults} ชุดข้อมูล`;
+        
+                // Update pagination
+                foundResult = document.querySelectorAll('.search-result-card:not(.hidden)');
+                generatePaginationButtons(foundResult.length);
+                showFoundResults(1); // Reset to first page
+        
+            } catch (error) {
+                console.error('Error applying filters:', error);
+            }
+        }
+        
+        function sortResults() {
+            try {
+                const sortBy = document.getElementById('sort-by').value;
+                const resultsContainer = document.querySelector('.space-y-4');
+                const results = Array.from(document.querySelectorAll('.search-result-card'));
+
+                results.sort((a, b) => {
+                    switch (sortBy) {
+                        case 'วันที่ปรับปรุงล่าสุด':
+                            // Get dates from the cards
+                            const dateA = a.querySelector('.text-gray-500').textContent.match(/\d{1,2}\s\w+\.\s\d{4}/);
+                            const dateB = b.querySelector('.text-gray-500').textContent.match(/\d{1,2}\s\w+\.\s\d{4}/);
+                            // Convert Thai dates to comparable values
+                            return new Date(dateB) - new Date(dateA);
+
+                        case 'ความนิยม':
+                            // Assuming we have download counts or popularity metrics
+                            const popularityA = parseInt(a.dataset.downloads || '0');
+                            const popularityB = parseInt(b.dataset.downloads || '0');
+                            return popularityB - popularityA;
+
+                        default: // 'ความเกี่ยวข้อง'
+                            // Keep original search relevance order
+                            return Array.from(resultsContainer.children).indexOf(a) - 
+                                Array.from(resultsContainer.children).indexOf(b);
+                    }
+                });
+
+                // Re-append sorted items
+                results.forEach(card => resultsContainer.appendChild(card));
+
+                // Update pagination after sorting
+                foundResult = results;
+                showFoundResults(1); // Reset to first page
+
+            } catch (error) {
+                console.error('Error sorting results:', error);
+            }
+        }
+        
+        // Dataset Modal Toggle (for demo purposes)
+        document.querySelectorAll('.dataset-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('button')) {
+                    document.getElementById('datasetModal').classList.remove('hidden');
+                }
+            });
+        });
+        
+        // Close Modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('datasetModal').classList.add('hidden');
+        });
+        
+        // Tab Switching in Modal
+        const tabs = document.querySelectorAll('#datasetModal [role="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('tab-active', 'text-blue-600', 'font-medium'));
+                tabs.forEach(t => t.classList.add('text-gray-600'));
+                this.classList.add('tab-active', 'text-blue-600', 'font-medium');
+                this.classList.remove('text-gray-600');
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            filterSearchResults();
+        });
+    </script>
+</body>
+</html>
