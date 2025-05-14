@@ -2080,7 +2080,6 @@
              }
 
             // Close mobile menu after navigation
-            mainNav.classList.remove('show');
             window.scrollTo(0, 0); // Scroll to top
         }
 
@@ -2102,7 +2101,7 @@
             const userProfileSection = document.getElementById('user-profile-section');
             const usernameDisplay = document.getElementById('username-display');
             const partnerLink = document.getElementById('partner-link');
-            const profileDropdown = document.getElementById('profile-dropdown'); 
+            // const profileDropdown = document.getElementById('profile-dropdown'); 
 
             if (isLoggedIn && String(username).toLocaleLowerCase() == 'user') {
                 loginRegisterButtons?.classList.add('hidden');
@@ -2120,12 +2119,10 @@
             }
         }
 
+        // Close dropdowns if clicked outside
         document.addEventListener('click', (event) => {
-            if (profileDropdown && !profileDropdown.contains(event.target) && !profileMenuButton.contains(event.target)) {
+            if (profileDropdown && !profileDropdown.contains(event.target)) {
                 profileDropdown.classList.add('hidden');
-            }
-             if (profileDropdownDesktop && !profileDropdownDesktop.contains(event.target) && !profileMenuButtonDesktop.contains(event.target)) {
-                profileDropdownDesktop.classList.add('hidden');
             }
         });
         
@@ -2146,6 +2143,7 @@
         let totalPages;
 
         function filterSearchResults(inputId) {
+            console.log(inputId);
             let searchInput;
             if (inputId) {
                 searchInput = document.getElementById(inputId).value;
