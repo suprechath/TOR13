@@ -35,8 +35,11 @@
         <nav class="px-4 sm:px-6 lg:px-8 py-3">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="#" class="flex items-center space-x-2">
-                        <img src="https://placehold.co/40x40/3498db/ffffff?text=MOL" alt="โลโก้กระทรวงแรงงาน" class="h-10 w-10 rounded-full object-cover" onerror="this.src='https://placehold.co/40x40/cccccc/ffffff?text=Logo'; this.onerror=null;">
+                    <a class="flex items-center space-x-2">  
+                        <!-- <img src="https://placehold.co/40x40/3498db/ffffff?text=MOL"  -->
+                        <img src="MOLLogo.png"
+                        alt="โลโก้กระทรวงแรงงาน" class="h-20 w-20 rounded-full object-cover" 
+                        onerror="this.src='https://placehold.co/40x40/cccccc/ffffff?text=Logo'; this.onerror=null;">
                         <span class="text-xl font-semibold text-gray-800">ระบบฐานข้อมูลกลาง</span>
                     </a>
                 </div>
@@ -190,15 +193,33 @@
         </div>
     </main>
 
-    <footer class="bg-gray-800 text-white mt-auto">
-         <div class="px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0">
-                <div class="text-sm text-gray-400">
-                    กระทรวงแรงงาน สงวนลิขสิทธิ์
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="px-6 py-6">
+            <div class="grid grid-cols-3 gap-8 justify-items-center">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">เกี่ยวกับระบบ</h3>
+                    <p class="text-sm text-gray-400">ระบบฐานข้อมูลกลางและมาตรฐานข้อมูล กระทรวงแรงงาน</p>
+                    <p class="text-sm text-gray-400">แหล่งรวมข้อมูลเปิดด้านแรงงานเพื่อการนำไปใช้ประโยชน์</p>
                 </div>
-                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out">นโยบายความเป็นส่วนตัว</a>
-                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out">ลิงก์ที่เกี่ยวข้อง</a>
-                <a href="#" class="text-sm text-gray-400 hover:text-white transition duration-150 ease-in-out justify-left">ข้อมูลติดต่อ</a>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">ลิงก์ที่เกี่ยวข้อง</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="https://www.mol.go.th/" class="text-gray-400 hover:text-white">กระทรวงแรงงาน</a></li>
+                        <li><a href="https://ops.mol.go.th/" class="text-gray-400 hover:text-white">สำนักงานปลัดกระทรวงแรงงาน</a></li>
+                        <li><a href="https://data.go.th" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">data.go.th (ศูนย์กลางข้อมูลเปิดภาครัฐ)</a></li>
+                        <li><a href="https://www.ratchakitcha.soc.go.th/DATA/PDF/2562/A/069/T_0052.PDF" class="text-gray-400 hover:text-white">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">เงื่อนไขการใช้งาน</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">ข้อมูลติดต่อ</h3>
+                    <p class="text-sm text-gray-400 mb-2">ศูนย์เทคโนโลยีสารสนเทศและการสื่อสาร <br>สำนักงานปลัดกระทรวงแรงงาน</p>
+                    <p class="text-sm text-gray-400 mb-2"><i class="fas fa-phone-alt mr-2"></i>0 2232 1414, 0 2232 1416</p>
+                    <p class="text-sm text-gray-400"><i class="fas fa-envelope mr-2"></i>istc@mol.mail.go.th</p>
+                </div>
+            </div>
+            <div class="mt-4 pt-2 border-t border-gray-700 text-center text-sm text-gray-500">
+                &copy; <span id="current-year"></span> ลิขสิทธิ์ของกระทรวงแรงงาน
             </div>
         </div>
     </footer>
